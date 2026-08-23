@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GameZone 🎮</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- NAVIGATION -->
+    <header>
+        <nav>
+            <h1>🎮 GameZone</h1>
+
+            <div class="nav-links">
+                <a href="#home">Home</a>
+                <a href="#games">Games</a>
+                <a href="#leaderboard">Leaderboard</a>
+                <a href="#news">News</a>
+            </div>
+        </nav>
+    </header>
+
+
+    <!-- HOME -->
+    <section id="home" class="hero">
+
+        <div class="hero-content">
+
+            <p class="small-title">
+                WELCOME TO THE GAMING WORLD
+            </p>
+
+            <h2>
+                LEVEL UP<br>
+                YOUR <span>GAME</span>
+            </h2>
+
+            <p class="description">
+                Discover games, compete with players,
+                and become a gaming legend.
+            </p>
+
+            <button class="main-button" onclick="startGaming()">
+                START GAMING
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- GAMES -->
+    <section id="games" class="section">
+
+        <h2>🔥 Popular Games</h2>
+
+        <div class="games-container">
+
+            <!-- GAME 1 -->
+            <div class="game-card">
+
+                <div class="game-image">
+                    🎯
+                </div>
+
+                <h3>Battle Arena</h3>
+
+                <p>
+                    Fight. Survive. Win.
+                </p>
+
+                <button onclick="playGame('Battle Arena')">
+                    PLAY NOW
+                </button>
+
+            </div>
+
+
+            <!-- GAME 2 -->
+            <div class="game-card">
+
+                <div class="game-image">
+                    🏎️
+                </div>
+
+                <h3>Speed Rush</h3>
+
+                <p>
+                    Race to the finish.
+                </p>
+
+                <button onclick="window.location.href='racing.html'">
+    PLAY NOW
+</button>
+
+            </div>
+
+
+            <!-- GAME 3 -->
+            <div class="game-card">
+
+                <div class="game-image">
+                    ⚔️
+                </div>
+
+                <h3>Warriors</h3>
+
+                <p>
+                    Become the ultimate warrior.
+                </p>
+
+                <button onclick="playGame('Warriors')">
+                    PLAY NOW
+                </button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- LEADERBOARD -->
+    <section id="leaderboard" class="section leaderboard">
+
+        <h2>🏆 Leaderboard</h2>
+
+        <div class="players">
+
+            <p>🥇 ShadowKing — 9850 XP</p>
+
+            <p>🥈 DragonX — 9120 XP</p>
+
+            <p>🥉 GhostPro — 8740 XP</p>
+
+            <p>🎮 GamerBoy — 8210 XP</p>
+
+        </div>
+
+    </section>
+
+
+    <!-- NEWS -->
+    <section id="news" class="section">
+
+        <h2>📰 Gaming News</h2>
+
+        <div class="news-card">
+
+            <h3>
+                New Battle Season Has Arrived!
+            </h3>
+
+            <p>
+                Get ready for new challenges,
+                new maps and amazing rewards.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- FOOTER -->
+    <footer>
+
+        <p>
+            © 2026 GameZone | Made by a Gamer 🎮
+        </p>
+
+    </footer>
+
+
+    <!-- JAVASCRIPT -->
+    <script src="script.js"></script>
+
+</body>
+</html>

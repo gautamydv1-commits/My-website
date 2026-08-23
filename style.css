@@ -1,0 +1,315 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background: #080808;
+    color: white;
+    font-family: Arial, sans-serif;
+}
+
+
+/* NAVIGATION */
+
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+
+    padding: 20px 7%;
+
+    background: rgba(0, 0, 0, 0.85);
+
+    backdrop-filter: blur(10px);
+
+    z-index: 1000;
+}
+
+nav {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+}
+
+nav h1 {
+    font-size: 28px;
+}
+
+.nav-links {
+    display: flex;
+
+    gap: 30px;
+}
+
+.nav-links a {
+    color: white;
+
+    text-decoration: none;
+
+    font-weight: bold;
+
+    transition: 0.3s;
+}
+
+.nav-links a:hover {
+    color: #00ff88;
+}
+
+
+/* HERO */
+
+.hero {
+    min-height: 100vh;
+
+    display: flex;
+
+    align-items: center;
+
+    padding: 120px 8%;
+
+    background:
+        radial-gradient(
+            circle at 80% 50%,
+            #174d35,
+            transparent 35%
+        ),
+
+        linear-gradient(
+            135deg,
+            #050505,
+            #111111
+        );
+}
+
+.hero-content {
+    max-width: 750px;
+}
+
+.small-title {
+    color: #00ff88;
+
+    letter-spacing: 4px;
+
+    font-weight: bold;
+}
+
+.hero h2 {
+    font-size: clamp(60px, 9vw, 120px);
+
+    line-height: 0.9;
+
+    margin: 25px 0;
+}
+
+.hero h2 span {
+    color: #00ff88;
+}
+
+.description {
+    color: #bbbbbb;
+
+    font-size: 18px;
+
+    margin-bottom: 30px;
+
+    max-width: 600px;
+}
+
+
+/* BUTTONS */
+
+button {
+    background: #00ff88;
+
+    color: #000;
+
+    border: none;
+
+    padding: 14px 28px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: 0.3s;
+}
+
+button:hover {
+    transform: scale(1.08);
+
+    box-shadow:
+        0 0 10px #00ff88,
+        0 0 30px #00ff88;
+}
+
+
+/* SECTIONS */
+
+.section {
+    padding: 100px 8%;
+}
+
+.section h2 {
+    font-size: 40px;
+
+    margin-bottom: 40px;
+}
+
+
+/* GAME CARDS */
+
+.games-container {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 25px;
+}
+
+.game-card {
+    background: #151515;
+
+    padding: 25px;
+
+    border: 1px solid #292929;
+
+    transition: 0.3s;
+}
+
+.game-card:hover {
+    transform: translateY(-10px);
+
+    border-color: #00ff88;
+
+    box-shadow:
+        0 10px 30px rgba(0, 255, 136, 0.15);
+}
+
+.game-image {
+    height: 200px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #111,
+            #292929
+        );
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    font-size: 80px;
+
+    margin-bottom: 20px;
+}
+
+.game-card h3 {
+    font-size: 25px;
+
+    margin-bottom: 10px;
+}
+
+.game-card p {
+    color: #aaa;
+
+    margin-bottom: 20px;
+}
+
+
+/* LEADERBOARD */
+
+.leaderboard {
+    background: #0d0d0d;
+}
+
+.players {
+    max-width: 700px;
+}
+
+.players p {
+    background: #171717;
+
+    margin: 10px 0;
+
+    padding: 20px;
+
+    border-left:
+        4px solid #00ff88;
+
+    transition: 0.3s;
+}
+
+.players p:hover {
+    transform: translateX(10px);
+
+    background: #202020;
+}
+
+
+/* NEWS */
+
+.news-card {
+    background: #151515;
+
+    padding: 30px;
+
+    max-width: 800px;
+
+    border-left:
+        4px solid #00ff88;
+}
+
+.news-card h3 {
+    font-size: 28px;
+
+    margin-bottom: 15px;
+}
+
+.news-card p {
+    color: #aaa;
+}
+
+
+/* FOOTER */
+
+footer {
+    text-align: center;
+
+    padding: 30px;
+
+    background: #050505;
+
+    color: #777;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 800px) {
+
+    .nav-links {
+        display: none;
+    }
+
+    .games-container {
+        grid-template-columns: 1fr;
+    }
+
+    .hero h2 {
+        font-size: 60px;
+    }
+}

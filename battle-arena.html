@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Battle Arena - 2 Player</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #080808;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        h1 {
+            color: #00ff88;
+            margin: 20px 0 8px;
+        }
+
+        .instructions {
+            color: #aaa;
+            margin-bottom: 15px;
+        }
+
+        .health-area {
+            width: min(900px, 94vw);
+            margin: auto;
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .player-info {
+            width: 45%;
+        }
+
+        .player-info p {
+            margin: 5px;
+            font-weight: bold;
+        }
+
+        .health-bar {
+            height: 22px;
+            background: #333;
+            border: 2px solid white;
+        }
+
+        .health {
+            height: 100%;
+            width: 100%;
+        }
+
+        #health1 {
+            background: #00aaff;
+        }
+
+        #health2 {
+            background: #ff4444;
+        }
+
+        #arena {
+            position: relative;
+            width: min(900px, 94vw);
+            height: 500px;
+            margin: 20px auto;
+            background: #151515;
+            border: 3px solid #00ff88;
+            overflow: hidden;
+        }
+
+        .player {
+            position: absolute;
+            width: 45px;
+            height: 45px;
+            border-radius: 8px;
+        }
+
+        #player1 {
+            background: #00aaff;
+            left: 50px;
+            bottom: 50px;
+        }
+
+        #player2 {
+            background: #ff4444;
+            right: 50px;
+            top: 50px;
+        }
+
+        .bullet {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .bullet1 {
+            background: #00aaff;
+        }
+
+        .bullet2 {
+            background: #ff4444;
+        }
+
+        #message {
+            font-size: 24px;
+            font-weight: bold;
+            min-height: 30px;
+        }
+
+        button {
+            padding: 12px 25px;
+            border: none;
+            background: #00ff88;
+            color: black;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>⚔️ BATTLE ARENA</h1>
+
+    <div class="instructions">
+        🔵 Player 1: W A S D + F to shoot
+        &nbsp;&nbsp;|&nbsp;&nbsp;
+        🔴 Player 2: Arrow Keys + L to shoot
+    </div>
+
+    <div class="health-area">
+
+        <div class="player-info">
+            <p>🔵 PLAYER 1</p>
+
+            <div class="health-bar">
+                <div id="health1" class="health"></div>
+            </div>
+        </div>
+
+        <div class="player-info">
+            <p>🔴 PLAYER 2</p>
+
+            <div class="health-bar">
+                <div id="health2" class="health"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <p id="message">FIGHT!</p>
+
+    <div id="arena">
+
+        <div id="player1" class="player"></div>
+
+        <div id="player2" class="player"></div>
+
+    </div>
+
+    <button onclick="restartGame()">RESTART GAME</button>
+
+
+    <script>
+
+        const arena = document.getElementById("arena");
+
+        const player1 = document.getElementById("player1");
+
+        const player2 = document.getElementById("player2");
+
+        const health1 = document.getElementById("health1");
+
+        const health2 = document.getElementById("health2");
+
+        const message = document.getElementById("message");
+
+
+        let p1Health = 100;
+        let p2Health = 100;
+
+        let gameOver = false;
+
+        const keys = {};
+
+
+        document.addEventListener("keydown", function(event) {
+
+            keys[event.key.toLowerCase()] = true;
+
+            if (
+                ["arrowup", "arrowdown", "arrowleft", "arrowright"].includes(
+                    event.key.toLowerCase()
+                )
+            ) {
+                event.preventDefault();
+            }
+
+            if (event.key.toLowerCase() === "f") {
+                shoot(1);
+            }
+
+            if (event.key.toLowerCase() === "l") {
+                shoot(2);
+            }
+
+        });
+
+
+        document.addEventListener("keyup", function(event) {
+
+            keys[event.key.toLowerCase()] = false;
+
+        });
+
+
+        function movePlayers() {
+
+            if (gameOver) {
+                return;
+            }
+
+            const speed = 5;
+
+            let p1Left = player1.offsetLeft;
+            let p1Top = player1.offsetTop;
+
+            let p2Left = player2.offsetLeft;
+            let p2Top = player2.offsetTop;
+
+
+            // PLAYER 1
+
+            if (keys["w"]) {
+                p1Top -= speed;
+            }
+
+            if (keys["s"]) {
+                p1Top += speed;
+            }
+
+            if (keys["a"]) {
+                p1Left -= speed;
+            }
+
+            if (keys["d"]) {
+                p1Left += speed;
+            }
+
+
+            // PLAYER 2
+
+            if (keys["arrowup"]) {
+                p2Top -= speed;
+            }
+
+            if (keys["arrowdown"]) {
+                p2Top += speed;
+            }
+
+            if (keys["arrowleft"]) {
+                p2Left -= speed;
+            }
+
+            if (keys["arrowright"]) {
+                p2Left += speed;
+            }
+
+
+            // Keep players inside arena
+
+            const maxX = arena.clientWidth - player1.offsetWidth;
+
+            const maxY = arena.clientHeight - player1.offsetHeight;
+
+
+            p1Left = Math.max(0, Math.min(p1Left, maxX));
+
+            p1Top = Math.max(0, Math.min(p1Top, maxY));
+
+            p2Left = Math.max(0, Math.min(p2Left, maxX));
+
+            p2Top = Math.max(0, Math.min(p2Top, maxY));
+
+
+            player1.style.left = p1Left + "px";
+
+            player1.style.top = p1Top + "px";
+
+            player1.style.bottom = "auto";
+
+
+            player2.style.left = p2Left + "px";
+
+            player2.style.top = p2Top + "px";
+
+        }
+
+
+        function shoot(playerNumber) {
+
+            if (gameOver) {
+                return;
+            }
+
+
+            const shooter =
+                playerNumber === 1 ? player1 : player2;
+
+            const target =
+                playerNumber === 1 ? player2 : player1;
+
+
+            const bullet = document.createElement("div");
+
+            bullet.classList.add(
+                "bullet",
+                playerNumber === 1
+                    ? "bullet1"
+                    : "bullet2"
+            );
+
+
+            const startX =
+                shooter.offsetLeft +
+                shooter.offsetWidth / 2;
+
+            const startY =
+                shooter.offsetTop +
+                shooter.offsetHeight / 2;
+
+
+            bullet.style.left = startX + "px";
+
+            bullet.style.top = startY + "px";
+
+
+            arena.appendChild(bullet);
+
+
+            const targetX =
+                target.offsetLeft +
+                target.offsetWidth / 2;
+
+            const targetY =
+                target.offsetTop +
+                target.offsetHeight / 2;
+
+
+            const dx = targetX - startX;
+
+            const dy = targetY - startY;
+
+            const distance =
+                Math.sqrt(dx * dx + dy * dy);
+
+
+            const velocityX = dx / distance * 8;
+
+            const velocityY = dy / distance * 8;
+
+
+            let x = startX;
+
+            let y = startY;
+
+
+            const bulletTimer = setInterval(function() {
+
+                if (gameOver) {
+
+                    clearInterval(bulletTimer);
+
+                    bullet.remove();
+
+                    return;
+                }
+
+
+                x += velocityX;
+
+                y += velocityY;
+
+
+                bullet.style.left = x + "px";
+
+                bullet.style.top = y + "px";
+
+
+                const bulletRect =
+                    bullet.getBoundingClientRect();
+
+                const targetRect =
+                    target.getBoundingClientRect();
+
+
+                if (
+                    bulletRect.left < targetRect.right &&
+                    bulletRect.right > targetRect.left &&
+                    bulletRect.top < targetRect.bottom &&
+                    bulletRect.bottom > targetRect.top
+                ) {
+
+                    if (playerNumber === 1) {
+
+                        p2Health -= 10;
+
+                        health2.style.width =
+                            p2Health + "%";
+
+                    } else {
+
+                        p1Health -= 10;
+
+                        health1.style.width =
+                            p1Health + "%";
+
+                    }
+
+
+                    bullet.remove();
+
+                    clearInterval(bulletTimer);
+
+
+                    checkWinner();
+
+                }
+
+
+                if (
+                    x < -20 ||
+                    x > arena.clientWidth + 20 ||
+                    y < -20 ||
+                    y > arena.clientHeight + 20
+                ) {
+
+                    bullet.remove();
+
+                    clearInterval(bulletTimer);
+
+                }
+
+            }, 20);
+
+        }
+
+
+        function checkWinner() {
+
+            if (p1Health <= 0) {
+
+                gameOver = true;
+
+                message.textContent =
+                    "🔴 PLAYER 2 WINS!";
+
+            }
+
+
+            if (p2Health <= 0) {
+
+                gameOver = true;
+
+                message.textContent =
+                    "🔵 PLAYER 1 WINS!";
+
+            }
+
+        }
+
+
+        function restartGame() {
+
+            p1Health = 100;
+
+            p2Health = 100;
+
+            gameOver = false;
+
+            health1.style.width = "100%";
+
+            health2.style.width = "100%";
+
+            message.textContent = "FIGHT!";
+
+
+            player1.style.left = "50px";
+
+            player1.style.top = "400px";
+
+            player2.style.left =
+                (arena.clientWidth - 95) + "px";
+
+            player2.style.top = "50px";
+
+
+            document
+                .querySelectorAll(".bullet")
+                .forEach(bullet => bullet.remove());
+
+        }
+
+
+        function gameLoop() {
+
+            movePlayers();
+
+            requestAnimationFrame(gameLoop);
+
+        }
+
+
+        gameLoop();
+
+    </script>
+
+</body>
+</html>
