@@ -1,0 +1,4134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Battle Arena | GameZone</title>
+
+<style>
+
+:root{
+    --bg:#04070b;
+    --panel:#0b1118;
+    --blue:#27a9ff;
+    --red:#ff416d;
+    --green:#00ff88;
+    --yellow:#ffd84d;
+    --purple:#b56cff;
+    --white:#f4f7fb;
+    --muted:#8491a1;
+}
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    min-height:100vh;
+
+    background:
+        radial-gradient(
+            circle at 10% 10%,
+            rgba(0,255,136,.08),
+            transparent 25%
+        ),
+        radial-gradient(
+            circle at 90% 90%,
+            rgba(39,169,255,.08),
+            transparent 30%
+        ),
+        var(--bg);
+
+    color:var(--white);
+
+    font-family:Arial,Helvetica,sans-serif;
+    overflow-x:hidden;
+}
+
+button{
+    font:inherit;
+}
+
+.topbar{
+    width:min(1250px,94vw);
+    margin:18px auto;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.logo{
+    color:var(--green);
+    text-decoration:none;
+    font-weight:900;
+    letter-spacing:4px;
+}
+
+.back{
+    color:var(--muted);
+    text-decoration:none;
+}
+
+.back:hover{
+    color:white;
+}
+
+.container{
+    width:min(1250px,94vw);
+    margin:auto;
+    padding-bottom:40px;
+}
+
+.header{
+    text-align:center;
+    margin-bottom:18px;
+}
+
+.eyebrow{
+    color:var(--green);
+    font-size:11px;
+    letter-spacing:4px;
+    font-weight:900;
+}
+
+h1{
+    margin:8px 0;
+    font-size:clamp(35px,6vw,65px);
+}
+
+.subtitle{
+    color:var(--muted);
+    margin:0;
+}
+
+/* =========================
+HUD
+========================= */
+
+.hud{
+    display:grid;
+    grid-template-columns:1fr 130px 1fr;
+    gap:15px;
+    margin-bottom:15px;
+}
+
+.fighter{
+    background:rgba(11,17,24,.96);
+    border:1px solid rgba(255,255,255,.1);
+    border-radius:15px;
+    padding:13px;
+}
+
+.player-card{
+    border-color:rgba(39,169,255,.4);
+}
+
+.bot-card{
+    border-color:rgba(255,65,109,.4);
+}
+
+.fighter-head{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:8px;
+
+    font-size:13px;
+    font-weight:bold;
+}
+
+.player-card .fighter-head{
+    color:var(--blue);
+}
+
+.bot-card .fighter-head{
+    color:var(--red);
+}
+
+.health-track{
+    height:13px;
+    background:#05080c;
+    padding:2px;
+    border-radius:20px;
+}
+
+.health-fill{
+    height:100%;
+    width:100%;
+    border-radius:20px;
+    transition:width .15s;
+}
+
+#playerHealth{
+    background:
+        linear-gradient(
+            90deg,
+            #0874c5,
+            #48c2ff
+        );
+}
+
+#botHealth{
+    background:
+        linear-gradient(
+            90deg,
+            #c71945,
+            #ff6687
+        );
+}
+
+.status{
+    min-height:20px;
+    margin-top:7px;
+    display:flex;
+    gap:5px;
+}
+
+.status span{
+    background:#17202a;
+    border-radius:5px;
+    padding:3px 6px;
+    font-size:9px;
+}
+
+.timer{
+    background:rgba(11,17,24,.96);
+    border:1px solid rgba(255,255,255,.1);
+    border-radius:15px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-direction:column;
+}
+
+.timer small{
+    color:var(--muted);
+    font-size:9px;
+    letter-spacing:3px;
+}
+
+#time{
+    font-size:30px;
+    font-weight:900;
+}
+
+/* =========================
+ARENA
+========================= */
+
+#arena{
+    position:relative;
+
+    width:100%;
+    height:680px;
+    max-height:68vh;
+    min-height:470px;
+
+    overflow:hidden;
+
+    border:2px solid rgba(0,255,136,.4);
+    border-radius:22px;
+
+    background:
+        linear-gradient(
+            rgba(255,255,255,.025) 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            90deg,
+            rgba(255,255,255,.025) 1px,
+            transparent 1px
+        ),
+        radial-gradient(
+            circle at center,
+            #101b22,
+            #070d13 72%
+        );
+
+    background-size:42px 42px;
+
+    box-shadow:
+        inset 0 0 100px rgba(0,0,0,.75),
+        0 0 50px rgba(0,255,136,.08);
+}
+
+/* =========================
+CENTER
+========================= */
+
+.center-core{
+    position:absolute;
+
+    left:50%;
+    top:50%;
+
+    transform:translate(-50%,-50%);
+
+    width:110px;
+    height:110px;
+
+    border:2px solid rgba(0,255,136,.15);
+
+    border-radius:50%;
+}
+
+.center-core::after{
+    content:"";
+
+    position:absolute;
+
+    left:50%;
+    top:50%;
+
+    width:16px;
+    height:16px;
+
+    transform:translate(-50%,-50%);
+
+    background:var(--green);
+
+    border-radius:50%;
+
+    box-shadow:
+        0 0 30px var(--green);
+}
+
+/* =========================
+WALLS
+========================= */
+
+.wall{
+    position:absolute;
+
+    background:
+        linear-gradient(
+            145deg,
+            #2b3946,
+            #111a23
+        );
+
+    border:1px solid rgba(255,255,255,.16);
+
+    border-radius:8px;
+
+    box-shadow:
+        inset 0 0 15px rgba(0,0,0,.5),
+        0 6px 15px rgba(0,0,0,.35);
+}
+
+.wall::before{
+    content:"";
+
+    position:absolute;
+
+    inset:7px;
+
+    border:1px solid rgba(255,255,255,.04);
+
+    border-radius:4px;
+}
+
+/* Arena map */
+
+.wall1{
+    left:23%;
+    top:13%;
+    width:180px;
+    height:44px;
+}
+
+.wall2{
+    right:23%;
+    top:13%;
+    width:180px;
+    height:44px;
+}
+
+.wall3{
+    left:7%;
+    top:43%;
+    width:170px;
+    height:48px;
+}
+
+.wall4{
+    right:7%;
+    top:43%;
+    width:170px;
+    height:48px;
+}
+
+.wall5{
+    left:23%;
+    bottom:13%;
+    width:180px;
+    height:44px;
+}
+
+.wall6{
+    right:23%;
+    bottom:13%;
+    width:180px;
+    height:44px;
+}
+
+.wall7{
+    left:42%;
+    top:30%;
+    width:180px;
+    height:45px;
+}
+
+.wall8{
+    left:42%;
+    bottom:30%;
+    width:180px;
+    height:45px;
+}
+
+/* =========================
+PLAYERS
+========================= */
+
+.character{
+    position:absolute;
+
+    width:54px;
+    height:60px;
+
+    z-index:20;
+
+    transition:
+        filter .08s,
+        transform .08s;
+}
+
+.body{
+    position:absolute;
+
+    left:8px;
+    top:9px;
+
+    width:38px;
+    height:42px;
+
+    border-radius:13px 13px 10px 10px;
+
+    border:2px solid white;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    box-shadow:
+        0 0 20px currentColor;
+}
+
+.body::before{
+    content:"";
+
+    position:absolute;
+
+    top:-9px;
+
+    width:27px;
+    height:21px;
+
+    border-radius:
+        50% 50% 8px 8px;
+
+    background:#dce6ee;
+
+    border:2px solid white;
+}
+
+.body::after{
+    content:"";
+
+    position:absolute;
+
+    top:-4px;
+
+    width:20px;
+    height:7px;
+
+    border-radius:5px;
+
+    background:#111a22;
+}
+
+.player{
+    position:absolute;
+
+    width:54px;
+    height:60px;
+
+    z-index:20;
+}
+
+.player .body{
+    background:
+        linear-gradient(
+            145deg,
+            #43bcff,
+            #0868b2
+        );
+
+    color:var(--blue);
+}
+
+.bot .body{
+    background:
+        linear-gradient(
+            145deg,
+            #ff6687,
+            #b91843
+        );
+
+    color:var(--red);
+}
+
+/* Arms */
+
+.arm{
+    position:absolute;
+
+    width:10px;
+    height:22px;
+
+    top:17px;
+
+    background:#dce6ee;
+
+    border:1px solid white;
+
+    border-radius:7px;
+
+    z-index:2;
+}
+
+.arm.left{
+    left:-7px;
+    transform:rotate(18deg);
+}
+
+.arm.right{
+    right:-7px;
+    transform:rotate(-18deg);
+}
+
+/* Weapon */
+
+.weapon{
+    position:absolute;
+
+    width:29px;
+    height:8px;
+
+    top:34px;
+
+    border-radius:3px;
+
+    background:#e0e8ee;
+
+    border:1px solid white;
+
+    z-index:4;
+}
+
+.player .weapon{
+    right:-17px;
+}
+
+.bot .weapon{
+    left:-17px;
+}
+
+.weapon.blaster{
+    background:#a9dfff;
+}
+
+.weapon.shotgun{
+    width:36px;
+    background:var(--yellow);
+}
+
+.weapon.rapid{
+    width:31px;
+    background:var(--purple);
+}
+
+/* Names */
+
+.name{
+    position:absolute;
+
+    top:65px;
+    left:50%;
+
+    transform:translateX(-50%);
+
+    white-space:nowrap;
+
+    font-size:9px;
+
+    font-weight:bold;
+
+    text-shadow:
+        0 2px 5px black;
+}
+
+/* Moving */
+
+.moving .body{
+    animation:walk .18s infinite alternate;
+}
+
+@keyframes walk{
+
+    from{
+        transform:translateY(0);
+    }
+
+    to{
+        transform:translateY(-3px);
+    }
+
+}
+
+/* Hit */
+
+.hit{
+    filter:brightness(2);
+}
+
+.hit .body{
+    animation:hit .15s;
+}
+
+@keyframes hit{
+
+    50%{
+        transform:scale(1.12);
+    }
+
+}
+
+/* =========================
+SHIELD
+========================= */
+
+.shield{
+    position:absolute;
+
+    left:-6px;
+    top:-2px;
+
+    width:66px;
+    height:66px;
+
+    border:3px solid #54d8ff;
+
+    border-radius:50%;
+
+    box-shadow:
+        0 0 25px #54d8ff;
+
+    animation:
+        shieldPulse .7s infinite alternate;
+
+    z-index:30;
+}
+
+@keyframes shieldPulse{
+
+    from{
+        opacity:.45;
+    }
+
+    to{
+        opacity:1;
+    }
+
+}
+
+/* =========================
+BULLETS
+========================= */
+
+.bullet{
+    position:absolute;
+
+    width:11px;
+    height:11px;
+
+    border-radius:50%;
+
+    z-index:15;
+
+    pointer-events:none;
+}
+
+.bullet.playerBullet{
+    background:#e8f8ff;
+
+    box-shadow:
+        0 0 8px var(--blue),
+        0 0 22px var(--blue);
+}
+
+.bullet.botBullet{
+    background:#ffe7ed;
+
+    box-shadow:
+        0 0 8px var(--red),
+        0 0 22px var(--red);
+}
+
+.bullet.pellet{
+    width:7px;
+    height:7px;
+}
+
+/* =========================
+POWERUPS
+========================= */
+
+.powerup{
+    position:absolute;
+
+    width:42px;
+    height:42px;
+
+    z-index:12;
+
+    display:grid;
+    place-items:center;
+
+    border:2px solid white;
+
+    border-radius:12px;
+
+    font-size:21px;
+
+    animation:
+        floatPower 1s infinite alternate;
+}
+
+@keyframes floatPower{
+
+    from{
+        transform:translateY(-4px);
+    }
+
+    to{
+        transform:translateY(4px);
+    }
+
+}
+
+.health-power{
+    color:#45ff88;
+    background:#123d28;
+    box-shadow:0 0 20px #45ff88;
+}
+
+.shield-power{
+    color:#54d8ff;
+    background:#10384b;
+    box-shadow:0 0 20px #54d8ff;
+}
+
+.speed-power{
+    color:#ffd84d;
+    background:#493c12;
+    box-shadow:0 0 20px #ffd84d;
+}
+
+.damage-power{
+    color:#ff6680;
+    background:#481522;
+    box-shadow:0 0 20px #ff6680;
+}
+
+/* =========================
+PARTICLES
+========================= */
+
+.particle{
+    position:absolute;
+
+    width:6px;
+    height:6px;
+
+    border-radius:50%;
+
+    background:white;
+
+    z-index:60;
+
+    pointer-events:none;
+
+    animation:
+        particle .5s ease-out forwards;
+}
+
+@keyframes particle{
+
+    to{
+        transform:
+            translate(
+                var(--x),
+                var(--y)
+            )
+            scale(0);
+
+        opacity:0;
+    }
+
+}
+
+/* =========================
+HIT RING
+========================= */
+
+.hit-ring{
+    position:absolute;
+
+    width:24px;
+    height:24px;
+
+    border:2px solid white;
+
+    border-radius:50%;
+
+    z-index:50;
+
+    animation:
+        ring .35s forwards;
+}
+
+@keyframes ring{
+
+    to{
+        transform:scale(3);
+        opacity:0;
+    }
+
+}
+
+/* =========================
+MUZZLE
+========================= */
+
+.muzzle{
+    position:absolute;
+
+    width:25px;
+    height:25px;
+
+    border-radius:50%;
+
+    background:white;
+
+    z-index:40;
+
+    box-shadow:
+        0 0 15px white,
+        0 0 30px currentColor;
+
+    animation:
+        muzzle .12s forwards;
+}
+
+@keyframes muzzle{
+
+    to{
+        transform:scale(2.2);
+        opacity:0;
+    }
+
+}
+
+/* =========================
+COUNTDOWN
+========================= */
+
+#countdown{
+    position:absolute;
+
+    inset:0;
+
+    z-index:80;
+
+    display:grid;
+
+    place-items:center;
+
+    pointer-events:none;
+
+    font-size:
+        clamp(
+            80px,
+            17vw,
+            180px
+        );
+
+    font-weight:1000;
+
+    color:var(--green);
+
+    text-shadow:
+        0 0 20px var(--green),
+        0 0 70px rgba(0,255,136,.5);
+}
+
+/* =========================
+OVERLAY
+========================= */
+
+.overlay{
+    position:absolute;
+
+    inset:0;
+
+    z-index:100;
+
+    display:grid;
+
+    place-items:center;
+
+    background:
+        rgba(2,5,8,.8);
+
+    backdrop-filter:blur(9px);
+}
+
+.hidden{
+    display:none;
+}
+
+.modal{
+    width:min(570px,90%);
+
+    padding:32px;
+
+    text-align:center;
+
+    border-radius:22px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(17,25,35,.98),
+            rgba(7,11,16,.98)
+        );
+
+    border:
+        1px solid
+        rgba(0,255,136,.3);
+
+    box-shadow:
+        0 30px 100px rgba(0,0,0,.7);
+}
+
+.modal h2{
+    margin:8px 0 10px;
+
+    font-size:35px;
+}
+
+.modal p{
+    color:var(--muted);
+
+    line-height:1.6;
+}
+
+/* Difficulty */
+
+.difficulty{
+    display:grid;
+
+    grid-template-columns:
+        repeat(3,1fr);
+
+    gap:8px;
+
+    margin:20px 0;
+}
+
+.difficulty button{
+    padding:10px;
+
+    border-radius:9px;
+
+    border:1px solid
+        rgba(255,255,255,.1);
+
+    background:#0b1118;
+
+    color:var(--muted);
+
+    cursor:pointer;
+}
+
+.difficulty button.active{
+    color:#031008;
+
+    background:var(--green);
+
+    border-color:var(--green);
+
+    font-weight:bold;
+}
+
+/* Controls */
+
+.controls{
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:10px;
+
+    margin:18px 0;
+}
+
+.control{
+    padding:13px;
+
+    border-radius:12px;
+
+    background:#080d13;
+
+    border:1px solid
+        rgba(255,255,255,.08);
+}
+
+.control strong{
+    display:block;
+
+    margin-bottom:7px;
+}
+
+.control span{
+    color:var(--muted);
+
+    font-size:11px;
+
+    line-height:2;
+}
+
+kbd{
+    background:#202b36;
+
+    border:1px solid #3c4a58;
+
+    padding:3px 6px;
+
+    border-radius:5px;
+
+    color:white;
+}
+
+.main-btn{
+    border:0;
+
+    padding:14px 30px;
+
+    border-radius:10px;
+
+    background:var(--green);
+
+    color:#021008;
+
+    font-weight:900;
+
+    cursor:pointer;
+
+    transition:.2s;
+}
+
+.main-btn:hover{
+    transform:translateY(-3px);
+
+    box-shadow:
+        0 0 30px
+        rgba(0,255,136,.3);
+}
+
+/* =========================
+BOTTOM
+========================= */
+
+.bottom{
+    margin-top:13px;
+
+    padding:13px 16px;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    gap:15px;
+
+    background:var(--panel);
+
+    border:
+        1px solid
+        rgba(255,255,255,.08);
+
+    border-radius:13px;
+}
+
+.message{
+    font-size:13px;
+
+    font-weight:bold;
+}
+
+.weapon-info{
+    color:var(--muted);
+
+    font-size:12px;
+}
+
+.weapon-info b{
+    color:white;
+}
+
+/* =========================
+SHAKE
+========================= */
+
+.shake{
+    animation:shake .18s;
+}
+
+@keyframes shake{
+
+    25%{
+        transform:
+            translate(4px,-3px);
+    }
+
+    50%{
+        transform:
+            translate(-4px,3px);
+    }
+
+    75%{
+        transform:
+            translate(3px,2px);
+    }
+
+}
+
+/* =========================
+MOBILE
+========================= */
+
+@media(max-width:750px){
+
+    .hud{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .timer{
+        grid-column:1/-1;
+        grid-row:1;
+        padding:8px;
+    }
+
+    .fighter{
+        grid-row:2;
+    }
+
+    #arena{
+        height:70vh;
+        min-height:450px;
+    }
+
+    .controls{
+        grid-template-columns:1fr;
+    }
+
+    .bottom{
+        flex-direction:column;
+    }
+
+    .difficulty{
+        grid-template-columns:1fr;
+    }
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<div class="topbar">
+
+    <a
+        href="index.html"
+        class="logo"
+    >
+        GAMEZONE
+    </a>
+
+    <a
+        href="index.html"
+        class="back"
+    >
+        ← Back
+    </a>
+
+</div>
+
+
+<div class="container">
+
+
+<header class="header">
+
+    <div class="eyebrow">
+        GAMEZONE ORIGINAL • SINGLE PLAYER
+    </div>
+
+    <h1>
+        🤖 BATTLE ARENA
+    </h1>
+
+    <p class="subtitle">
+        Fight the AI. Survive the arena. Become the champion.
+    </p>
+
+</header>
+
+
+<!-- HUD -->
+
+<div class="hud">
+
+
+    <div class="fighter player-card">
+
+        <div class="fighter-head">
+
+            <span>
+                🔵 YOU
+            </span>
+
+            <span id="playerHpText">
+                100 HP
+            </span>
+
+        </div>
+
+        <div class="health-track">
+
+            <div
+                id="playerHealth"
+                class="health-fill"
+            ></div>
+
+        </div>
+
+        <div
+            id="playerStatus"
+            class="status"
+        ></div>
+
+    </div>
+
+
+    <div class="timer">
+
+        <small>
+            TIME
+        </small>
+
+        <span id="time">
+            90
+        </span>
+
+    </div>
+
+
+    <div class="fighter bot-card">
+
+        <div class="fighter-head">
+
+            <span>
+                🔴 AI BOT
+            </span>
+
+            <span id="botHpText">
+                100 HP
+            </span>
+
+        </div>
+
+        <div class="health-track">
+
+            <div
+                id="botHealth"
+                class="health-fill"
+            ></div>
+
+        </div>
+
+        <div
+            id="botStatus"
+            class="status"
+        ></div>
+
+    </div>
+
+
+</div>
+
+
+<!-- ARENA -->
+
+<div id="arena">
+
+
+    <div class="center-core"></div>
+
+
+    <!-- Walls -->
+
+    <div class="wall wall1"></div>
+
+    <div class="wall wall2"></div>
+
+    <div class="wall wall3"></div>
+
+    <div class="wall wall4"></div>
+
+    <div class="wall wall5"></div>
+
+    <div class="wall wall6"></div>
+
+    <div class="wall wall7"></div>
+
+    <div class="wall wall8"></div>
+
+
+    <!-- Player -->
+
+    <div
+        id="player"
+        class="player character"
+    >
+
+        <div class="body">
+
+            <div class="arm left"></div>
+
+            <div class="arm right"></div>
+
+            <div
+                id="playerWeapon"
+                class="weapon blaster"
+            ></div>
+
+        </div>
+
+        <div class="name">
+            YOU
+        </div>
+
+    </div>
+
+
+    <!-- Bot -->
+
+    <div
+        id="bot"
+        class="bot character"
+    >
+
+        <div class="body">
+
+            <div class="arm left"></div>
+
+            <div class="arm right"></div>
+
+            <div
+                id="botWeapon"
+                class="weapon blaster"
+            ></div>
+
+        </div>
+
+        <div class="name">
+            AI BOT
+        </div>
+
+    </div>
+
+
+    <!-- Countdown -->
+
+    <div id="countdown"></div>
+
+
+    <!-- START SCREEN -->
+
+    <div
+        id="startOverlay"
+        class="overlay"
+    >
+
+        <div class="modal">
+
+            <div class="eyebrow">
+                BATTLE ARENA AI
+            </div>
+
+            <h2>
+                READY TO FIGHT?
+            </h2>
+
+            <p>
+                You are entering the arena against
+                an AI-controlled opponent.
+            </p>
+
+
+            <strong>
+                SELECT DIFFICULTY
+            </strong>
+
+
+            <div class="difficulty">
+
+                <button
+                    data-difficulty="easy"
+                    class="difficultyBtn"
+                >
+                    🟢 EASY
+                </button>
+
+                <button
+                    data-difficulty="normal"
+                    class="difficultyBtn active"
+                >
+                    🟡 NORMAL
+                </button>
+
+                <button
+                    data-difficulty="hard"
+                    class="difficultyBtn"
+                >
+                    🔴 HARD
+                </button>
+
+            </div>
+
+
+            <div class="controls">
+
+                <div class="control">
+
+                    <strong>
+                        🎮 YOUR CONTROLS
+                    </strong>
+
+                    <span>
+
+                        <kbd>W A S D</kbd>
+                        Move<br>
+
+                        <kbd>F</kbd>
+                        Shoot<br>
+
+                        <kbd>1</kbd>
+                        Blaster<br>
+
+                        <kbd>2</kbd>
+                        Shotgun<br>
+
+                        <kbd>3</kbd>
+                        Rapid
+
+                    </span>
+
+                </div>
+
+
+                <div class="control">
+
+                    <strong>
+                        🤖 AI BOT
+                    </strong>
+
+                    <span>
+
+                        Automatically<br>
+                        moves<br>
+                        aims<br>
+                        shoots<br>
+                        collects power-ups
+
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <button
+                id="startBtn"
+                class="main-btn"
+            >
+                START BATTLE
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- RESULT -->
+
+    <div
+        id="resultOverlay"
+        class="overlay hidden"
+    >
+
+        <div class="modal">
+
+            <div class="eyebrow">
+                MATCH COMPLETE
+            </div>
+
+            <h2 id="resultTitle">
+                YOU WIN!
+            </h2>
+
+            <p id="resultText"></p>
+
+            <button
+                id="restartBtn"
+                class="main-btn"
+            >
+                PLAY AGAIN
+            </button>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+<div class="bottom">
+
+    <div
+        id="message"
+        class="message"
+    >
+        Choose a difficulty and start the battle.
+    </div>
+
+    <div class="weapon-info">
+
+        🔫
+        <b>1</b> Blaster
+        •
+        <b>2</b> Shotgun
+        •
+        <b>3</b> Rapid
+
+    </div>
+
+</div>
+
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   ELEMENTS
+========================================================= */
+
+const arena =
+    document.getElementById("arena");
+
+const playerEl =
+    document.getElementById("player");
+
+const botEl =
+    document.getElementById("bot");
+
+const playerHealth =
+    document.getElementById("playerHealth");
+
+const botHealth =
+    document.getElementById("botHealth");
+
+const playerHpText =
+    document.getElementById("playerHpText");
+
+const botHpText =
+    document.getElementById("botHpText");
+
+const playerStatus =
+    document.getElementById("playerStatus");
+
+const botStatus =
+    document.getElementById("botStatus");
+
+const playerWeapon =
+    document.getElementById("playerWeapon");
+
+const botWeapon =
+    document.getElementById("botWeapon");
+
+const timeEl =
+    document.getElementById("time");
+
+const countdown =
+    document.getElementById("countdown");
+
+const message =
+    document.getElementById("message");
+
+const startOverlay =
+    document.getElementById("startOverlay");
+
+const resultOverlay =
+    document.getElementById("resultOverlay");
+
+const resultTitle =
+    document.getElementById("resultTitle");
+
+const resultText =
+    document.getElementById("resultText");
+
+
+/* =========================================================
+   GAME
+========================================================= */
+
+const keys = {};
+
+const bullets = [];
+
+const powerups = [];
+
+let running = false;
+
+let gameOver = false;
+
+let countdownRunning = false;
+
+let timeLeft = 90;
+
+let timerInterval = null;
+
+let powerupInterval = null;
+
+let difficulty = "normal";
+
+
+/* =========================================================
+   PLAYER DATA
+========================================================= */
+
+const SIZE = 54;
+
+const player = {
+
+    x:60,
+    y:0,
+
+    hp:100,
+
+    weapon:0,
+
+    shield:false,
+
+    speedBoost:false,
+
+    damageBoost:false,
+
+    lastShot:0,
+    vx:0,
+    vy:0
+
+};
+
+
+const bot = {
+
+    x:0,
+    y:60,
+
+    hp:100,
+
+    weapon:0,
+
+    shield:false,
+
+    speedBoost:false,
+
+    damageBoost:false,
+
+    lastShot:0,
+
+    aiTimer:0,
+
+    strafeDirection:1,
+
+    targetPowerup:null,
+    nextDecisionAt:0,
+    vx:0,
+    vy:0
+
+};
+
+
+/* =========================================================
+   WEAPONS
+========================================================= */
+
+const weapons = [
+
+    {
+        name:"BLASTER",
+
+        damage:10,
+
+        cooldown:320,
+
+        speed:10,
+
+        bullets:1,
+
+        spread:0
+    },
+
+    {
+        name:"SHOTGUN",
+
+        damage:6,
+
+        cooldown:750,
+
+        speed:8,
+
+        bullets:6,
+
+        spread:.35
+    },
+
+    {
+        name:"RAPID",
+
+        damage:4,
+
+        cooldown:110,
+
+        speed:12,
+
+        bullets:1,
+
+        spread:0
+    }
+
+];
+
+
+/* =========================================================
+   DIFFICULTY
+========================================================= */
+
+const difficultySettings = {
+    // Difficulty changes reaction timing and movement speed, never aim accuracy.
+    easy:{speed:3.0, reaction:260},
+    normal:{speed:3.7, reaction:150},
+    hard:{speed:4.4, reaction:70}
+};
+
+
+/* =========================================================
+   AUDIO
+========================================================= */
+
+let audio = null;
+
+
+function initAudio(){
+
+    if(!audio){
+
+        audio =
+            new (
+                window.AudioContext ||
+                window.webkitAudioContext
+            )();
+
+    }
+
+    if(audio.state === "suspended"){
+
+        audio.resume();
+
+    }
+
+}
+
+
+function sound(type){
+
+    if(!audio)
+        return;
+
+
+    const oscillator =
+        audio.createOscillator();
+
+    const gain =
+        audio.createGain();
+
+
+    oscillator.connect(gain);
+
+    gain.connect(
+        audio.destination
+    );
+
+
+    const now =
+        audio.currentTime;
+
+
+    let frequency = 400;
+
+    let duration = .08;
+
+
+    if(type === "shoot"){
+
+        frequency = 600;
+        duration = .05;
+
+    }
+
+    if(type === "shotgun"){
+
+        frequency = 250;
+        duration = .12;
+
+    }
+
+    if(type === "hit"){
+
+        frequency = 120;
+        duration = .08;
+
+    }
+
+    if(type === "pickup"){
+
+        frequency = 850;
+        duration = .18;
+
+    }
+
+    if(type === "count"){
+
+        frequency = 450;
+        duration = .1;
+
+    }
+
+    if(type === "go"){
+
+        frequency = 950;
+        duration = .25;
+
+    }
+
+    if(type === "win"){
+
+        frequency = 900;
+        duration = .45;
+
+    }
+
+
+    oscillator.type =
+        type === "hit"
+            ? "sawtooth"
+            : "square";
+
+
+    oscillator.frequency.setValueAtTime(
+        frequency,
+        now
+    );
+
+
+    gain.gain.setValueAtTime(
+        .0001,
+        now
+    );
+
+
+    gain.gain.exponentialRampToValueAtTime(
+        .08,
+        now + .01
+    );
+
+
+    gain.gain.exponentialRampToValueAtTime(
+        .0001,
+        now + duration
+    );
+
+
+    oscillator.start(now);
+
+    oscillator.stop(
+        now + duration
+    );
+
+}
+
+
+/* =========================================================
+   MAP COLLISION
+========================================================= */
+
+function getWalls(){
+
+    return [
+        ...document.querySelectorAll(".wall")
+    ].map(
+        wall => ({
+
+            left:
+                wall.offsetLeft,
+
+            top:
+                wall.offsetTop,
+
+            right:
+                wall.offsetLeft +
+                wall.offsetWidth,
+
+            bottom:
+                wall.offsetTop +
+                wall.offsetHeight
+
+        })
+    );
+
+}
+
+
+function overlap(a,b){
+
+    return (
+
+        a.left < b.right &&
+
+        a.right > b.left &&
+
+        a.top < b.bottom &&
+
+        a.bottom > b.top
+
+    );
+
+}
+
+
+function rectFor(obj){
+
+    return {
+
+        left:obj.x,
+
+        right:
+            obj.x + SIZE,
+
+        top:obj.y,
+
+        bottom:
+            obj.y + SIZE
+
+    };
+
+}
+
+
+function blocked(obj){
+
+    const rect =
+        rectFor(obj);
+
+
+    return getWalls().some(
+        wall =>
+            overlap(
+                rect,
+                wall
+            )
+    );
+
+}
+
+
+/* =========================================================
+   MOVEMENT
+========================================================= */
+
+function moveObject(
+    obj,
+    dx,
+    dy,
+    speed
+){
+
+    if(dx !== 0 && dy !== 0){
+
+        dx *= .707;
+
+        dy *= .707;
+
+    }
+
+
+    const oldX =
+        obj.x;
+
+    const oldY =
+        obj.y;
+
+
+    obj.x +=
+        dx * speed;
+
+    obj.y +=
+        dy * speed;
+
+
+    const maxX =
+        arena.clientWidth -
+        SIZE;
+
+    const maxY =
+        arena.clientHeight -
+        SIZE;
+
+
+    obj.x =
+        Math.max(
+            0,
+            Math.min(
+                maxX,
+                obj.x
+            )
+        );
+
+
+    obj.y =
+        Math.max(
+            0,
+            Math.min(
+                maxY,
+                obj.y
+            )
+        );
+
+
+    if(blocked(obj)){
+        obj.x = oldX;
+        obj.y = oldY;
+
+        // Slide along walls instead of cancelling the entire movement.
+        if(dx !== 0){
+            obj.x = Math.max(0, Math.min(maxX, oldX + dx * speed));
+            if(blocked(obj)) obj.x = oldX;
+        }
+        if(dy !== 0){
+            obj.y = Math.max(0, Math.min(maxY, oldY + dy * speed));
+            if(blocked(obj)) obj.y = oldY;
+        }
+    }
+
+}
+
+
+/* =========================================================
+   PLAYER MOVEMENT
+========================================================= */
+
+function updatePlayer(){
+
+    if(!running)
+        return;
+
+
+    let dx = 0;
+
+    let dy = 0;
+
+
+    if(keys["w"])
+        dy--;
+
+    if(keys["s"])
+        dy++;
+
+    if(keys["a"])
+        dx--;
+
+    if(keys["d"])
+        dx++;
+
+
+    const speed =
+        player.speedBoost
+            ? 7
+            : 4.5;
+
+
+    const beforeX = player.x;
+    const beforeY = player.y;
+
+    moveObject(
+        player,
+        dx,
+        dy,
+        speed
+    );
+
+    player.vx = player.x - beforeX;
+    player.vy = player.y - beforeY;
+
+
+
+    playerEl.style.left =
+        player.x + "px";
+
+    playerEl.style.top =
+        player.y + "px";
+
+
+    playerEl.classList.toggle(
+        "moving",
+        dx !== 0 || dy !== 0
+    );
+
+}
+
+
+/* =========================================================
+   BOT AI
+========================================================= */
+
+function botCenter(obj){
+    return {x:obj.x + SIZE/2, y:obj.y + SIZE/2};
+}
+
+function pointBlocked(x,y){
+    const r={left:x-SIZE/2,right:x+SIZE/2,top:y-SIZE/2,bottom:y+SIZE/2};
+    return getWalls().some(w=>overlap(r,w)) || x-SIZE/2<0 || y-SIZE/2<0 || x+SIZE/2>arena.clientWidth || y+SIZE/2>arena.clientHeight;
+}
+
+function segmentHitsWall(x1,y1,x2,y2){
+    const dx=x2-x1,dy=y2-y1,len=Math.hypot(dx,dy);
+    const steps=Math.max(8,Math.ceil(len/12));
+    for(let i=1;i<steps;i++){
+        const t=i/steps,x=x1+dx*t,y=y1+dy*t;
+        if(getWalls().some(w=>x>=w.left&&x<=w.right&&y>=w.top&&y<=w.bottom)) return true;
+    }
+    return false;
+}
+
+function clearShot(a,b){
+    const A=botCenter(a),B=botCenter(b);
+    return !segmentHitsWall(A.x,A.y,B.x,B.y);
+}
+
+function nearestPowerupForBot(){
+    let best=null,bestScore=Infinity;
+    for(const power of powerups){
+        const d=Math.hypot(power.x+21-(bot.x+SIZE/2),power.y+21-(bot.y+SIZE/2));
+        let score=d;
+        if(power.type==='health'&&bot.hp<65) score-=220;
+        if(power.type==='shield'&&!bot.shield) score-=180;
+        if(power.type==='damage') score-=120;
+        if(power.type==='speed') score-=70;
+        if(d<520&&score<bestScore&&!segmentHitsWall(bot.x+SIZE/2,bot.y+SIZE/2,power.x+21,power.y+21)){best=power;bestScore=score;}
+    }
+    return best;
+}
+
+function chooseBotWeapon(distance){
+    if(distance<210) return 1;
+    if(distance<430) return 2;
+    return 0;
+}
+
+function incomingThreat(){
+    const cx=bot.x+SIZE/2,cy=bot.y+SIZE/2;
+    let threat=null,best=Infinity;
+    for(const bullet of bullets){
+        if(bullet.owner!=='player') continue;
+        const bx=bullet.x+5,by=bullet.y+5,len=Math.hypot(bullet.vx,bullet.vy)||1;
+        const tx=cx-bx,ty=cy-by;
+        const along=(tx*bullet.vx+ty*bullet.vy)/(len*len);
+        if(along<=0||along>1) continue;
+        const px=bx+bullet.vx*along,py=by+bullet.vy*along;
+        const miss=Math.hypot(px-cx,py-cy);
+        if(miss<80){const score=miss+along*80;if(score<best){best=score;threat=bullet;}}
+    }
+    return threat;
+}
+
+function botPathDirection(targetX,targetY){
+    const sx=bot.x+SIZE/2,sy=bot.y+SIZE/2;
+    let dx=targetX-sx,dy=targetY-sy,d=Math.hypot(dx,dy)||1;
+    dx/=d;dy/=d;
+    if(!pointBlocked(sx+dx*34,sy+dy*34)) return {x:dx,y:dy};
+    const candidates=[];
+    for(let i=0;i<24;i++){
+        const angle=Math.atan2(dy,dx)+(i-12)*(Math.PI/24);
+        const vx=Math.cos(angle),vy=Math.sin(angle),probe=105;
+        const px=sx+vx*probe,py=sy+vy*probe;
+        if(pointBlocked(px,py)) continue;
+        const wallPenalty=segmentHitsWall(sx,sy,px,py)?180:0;
+        const targetPenalty=segmentHitsWall(px,py,targetX,targetY)?120:0;
+        const anglePenalty=(1-(vx*dx+vy*dy))*70;
+        candidates.push({x:vx,y:vy,score:wallPenalty+targetPenalty+anglePenalty});
+    }
+    candidates.sort((a,b)=>a.score-b.score);
+    return candidates[0]||{x:0,y:0};
+}
+
+function updateBot(){
+    if(!running||gameOver) return;
+    const settings=difficultySettings[difficulty];
+    const bc=botCenter(bot),pc=botCenter(player);
+    const dx=pc.x-bc.x,dy=pc.y-bc.y,distance=Math.hypot(dx,dy)||1;
+    const visible=clearShot(bot,player);
+    bot.weapon=chooseBotWeapon(distance);
+    updateWeaponVisual(botWeapon,bot.weapon);
+
+    let moveX=0,moveY=0;
+    const threat=incomingThreat();
+    if(threat){
+        const len=Math.hypot(threat.vx,threat.vy)||1,side=bot.strafeDirection;
+        moveX=(-threat.vy/len)*side;moveY=(threat.vx/len)*side;
+    }else{
+        const power=nearestPowerupForBot();
+        if(power&&(bot.hp<70||!bot.shield||distance>360)){
+            const v=botPathDirection(power.x+21,power.y+21);moveX=v.x;moveY=v.y;
+        }else{
+            const desired=bot.weapon===1?175:(bot.weapon===2?300:440);
+            if(!visible||distance>desired+55){
+                const v=botPathDirection(pc.x,pc.y);moveX=v.x;moveY=v.y;
+            }else if(distance<desired-65){
+                const v=botPathDirection(bc.x-dx,bc.y-dy);moveX=v.x;moveY=v.y;
+            }else{
+                const side=bot.strafeDirection;moveX=(-dy/distance)*side;moveY=(dx/distance)*side;
+            }
+        }
+    }
+
+    const botSpeed=bot.speedBoost?7:settings.speed;
+    const beforeX = bot.x;
+    const beforeY = bot.y;
+    moveObject(bot,moveX,moveY,botSpeed);
+    bot.vx = bot.x - beforeX;
+    bot.vy = bot.y - beforeY;
+
+    botEl.style.left=bot.x+'px';botEl.style.top=bot.y+'px';
+    botEl.classList.toggle('moving',Math.abs(moveX)+Math.abs(moveY)>0.05);
+    bot.aiTimer++;
+    if(bot.aiTimer%55===0) bot.strafeDirection*=-1;
+    // Shoot only when the bot's decision timer allows it. Weapon cooldown
+    // still controls the actual fire rate.
+    const now = performance.now();
+    if(visible && distance < 760 && now >= bot.nextDecisionAt){
+        botShoot();
+        bot.nextDecisionAt = now + settings.reaction;
+    }
+}
+
+/* =========================================================
+   LINE OF SIGHT
+========================================================= */
+
+function lineBlocked(
+    x1,
+    y1,
+    x2,
+    y2
+){
+
+    const steps = 30;
+
+
+    for(
+        let i=1;
+        i<steps;
+        i++
+    ){
+
+        const t =
+            i / steps;
+
+
+        const x =
+            x1 +
+            (x2-x1) *
+            t;
+
+
+        const y =
+            y1 +
+            (y2-y1) *
+            t;
+
+
+        const point = {
+
+            left:x,
+            right:x+2,
+
+            top:y,
+            bottom:y+2
+
+        };
+
+
+        if(
+            getWalls().some(
+                wall =>
+                    overlap(
+                        point,
+                        wall
+                    )
+            )
+        ){
+
+            return true;
+
+        }
+
+    }
+
+
+    return false;
+
+}
+
+
+/* =========================================================
+   SHOOTING
+========================================================= */
+
+function getAimPoint(shooter, target, weapon){
+    const sx = shooter.x + SIZE/2;
+    const sy = shooter.y + SIZE/2;
+    const tx = target.x + SIZE/2;
+    const ty = target.y + SIZE/2;
+
+    // Predict where the player will be when the projectile arrives.
+    if(shooter === bot && (target.vx || target.vy)){
+        const distance = Math.hypot(tx-sx, ty-sy);
+        const travelTime = distance / Math.max(weapon.speed, 1);
+        const leadX = Math.max(SIZE/2, Math.min(arena.clientWidth - SIZE/2, tx + target.vx * travelTime * 0.9));
+        const leadY = Math.max(SIZE/2, Math.min(arena.clientHeight - SIZE/2, ty + target.vy * travelTime * 0.9));
+
+        // Never lead a shot around a wall. If the predicted point is blocked,
+        // aim at the visible current position instead.
+        if(!segmentHitsWall(sx, sy, leadX, leadY)){
+            return {x:leadX, y:leadY};
+        }
+    }
+
+    return {x:tx, y:ty};
+}
+
+function shoot(
+    owner
+){
+
+    if(
+        !running ||
+        gameOver
+    )
+        return;
+
+
+    const obj =
+        owner === "player"
+            ? player
+            : bot;
+
+
+    const target =
+        owner === "player"
+            ? bot
+            : player;
+
+
+    const weapon =
+        weapons[
+            obj.weapon
+        ];
+
+
+    const now =
+        performance.now();
+
+
+    if(
+        now -
+        obj.lastShot <
+        weapon.cooldown
+    ){
+
+        return;
+
+    }
+
+
+    obj.lastShot =
+        now;
+
+
+    const startX =
+        obj.x +
+        SIZE / 2;
+
+
+    const startY =
+        obj.y +
+        SIZE / 2;
+
+
+    const aim = getAimPoint(obj, target, weapon);
+
+    let dx = aim.x - startX;
+    let dy = aim.y - startY;
+
+
+    const distance =
+        Math.hypot(
+            dx,
+            dy
+        ) || 1;
+
+
+    dx /= distance;
+
+    dy /= distance;
+
+
+    sound(
+        weapon.bullets > 1
+            ? "shotgun"
+            : "shoot"
+    );
+
+
+    createMuzzle(
+        startX,
+        startY,
+        owner
+    );
+
+
+    for(
+        let i=0;
+        i<weapon.bullets;
+        i++
+    ){
+
+        let angle =
+            Math.atan2(
+                dy,
+                dx
+            );
+
+
+        // Bot tracks the target precisely. Shotgun spread remains natural.
+
+        if(
+            weapon.spread
+        ){
+
+            angle +=
+                (
+                    Math.random() -
+                    .5
+                )
+                *
+                weapon.spread;
+
+        }
+
+
+        const bullet = {
+
+            x:
+                startX - 5,
+
+            y:
+                startY - 5,
+
+            vx:
+                Math.cos(angle) *
+                weapon.speed,
+
+            vy:
+                Math.sin(angle) *
+                weapon.speed,
+
+            owner,
+
+            damage:
+                weapon.damage *
+                (
+                    obj.damageBoost
+                        ? 2
+                        : 1
+                ),
+
+            el:
+                document.createElement(
+                    "div"
+                )
+
+        };
+
+
+        bullet.el.className =
+            "bullet " +
+            (
+                owner === "player"
+                    ? "playerBullet"
+                    : "botBullet"
+            );
+
+
+        if(
+            weapon.bullets > 1
+        ){
+
+            bullet.el.classList.add(
+                "pellet"
+            );
+
+        }
+
+
+        arena.appendChild(
+            bullet.el
+        );
+
+
+        bullets.push(
+            bullet
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   BOT SHOOT
+========================================================= */
+
+function botShoot(){
+    if(!running||gameOver) return;
+    const distance=Math.hypot(player.x-bot.x,player.y-bot.y);
+    bot.weapon=chooseBotWeapon(distance);
+    updateWeaponVisual(botWeapon,bot.weapon);
+    if(!clearShot(bot,player)) return;
+    shoot("bot");
+}
+
+/* =========================================================
+   PLAYER SHOOT
+========================================================= */
+
+function playerShoot(){
+
+    shoot("player");
+
+}
+
+
+/* =========================================================
+   BULLET UPDATE
+========================================================= */
+
+function updateBullets(){
+
+    if(!running)
+        return;
+
+
+    [...bullets].forEach(
+        bullet => {
+
+            bullet.x +=
+                bullet.vx;
+
+            bullet.y +=
+                bullet.vy;
+
+
+            bullet.el.style.left =
+                bullet.x + "px";
+
+            bullet.el.style.top =
+                bullet.y + "px";
+
+
+            const rect = {
+
+                left:
+                    bullet.x,
+
+                right:
+                    bullet.x + 10,
+
+                top:
+                    bullet.y,
+
+                bottom:
+                    bullet.y + 10
+
+            };
+
+
+            /* Wall collision */
+
+            if(
+                getWalls().some(
+                    wall =>
+                        overlap(
+                            rect,
+                            wall
+                        )
+                )
+            ){
+
+                particles(
+                    bullet.x,
+                    bullet.y,
+                    5
+                );
+
+
+                removeBullet(
+                    bullet
+                );
+
+
+                return;
+
+            }
+
+
+            /* Outside arena */
+
+            if(
+                bullet.x < -30 ||
+                bullet.y < -30 ||
+                bullet.x >
+                    arena.clientWidth + 30 ||
+                bullet.y >
+                    arena.clientHeight + 30
+            ){
+
+                removeBullet(
+                    bullet
+                );
+
+
+                return;
+
+            }
+
+
+            const target =
+                bullet.owner === "player"
+                    ? bot
+                    : player;
+
+
+            if(
+                overlap(
+                    rect,
+                    rectFor(target)
+                )
+            ){
+
+                hitEffect(
+                    bullet.x,
+                    bullet.y
+                );
+
+
+                damage(
+                    target,
+                    bullet.damage
+                );
+
+
+                removeBullet(
+                    bullet
+                );
+
+            }
+
+        }
+    );
+
+}
+
+
+function removeBullet(
+    bullet
+){
+
+    bullet.el.remove();
+
+
+    const index =
+        bullets.indexOf(
+            bullet
+        );
+
+
+    if(index !== -1){
+
+        bullets.splice(
+            index,
+            1
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   DAMAGE
+========================================================= */
+
+function damage(
+    target,
+    amount
+){
+
+    if(
+        target.shield
+    ){
+
+        target.shield =
+            false;
+
+
+        removeShield(
+            target === player
+                ? "player"
+                : "bot"
+        );
+
+
+        message.textContent =
+            target === player
+                ? "🛡️ Your shield blocked the attack!"
+                : "🛡️ The bot's shield blocked your attack!";
+
+
+        particles(
+            target.x +
+            SIZE/2,
+
+            target.y +
+            SIZE/2,
+
+            15
+        );
+
+
+        updateHUD();
+
+
+        return;
+
+    }
+
+
+    target.hp =
+        Math.max(
+            0,
+            target.hp -
+            amount
+        );
+
+
+    updateHUD();
+
+
+    const element =
+        target === player
+            ? playerEl
+            : botEl;
+
+
+    element.classList.add(
+        "hit"
+    );
+
+
+    arena.classList.add(
+        "shake"
+    );
+
+
+    setTimeout(
+        () =>
+            element.classList.remove(
+                "hit"
+            ),
+        180
+    );
+
+
+    setTimeout(
+        () =>
+            arena.classList.remove(
+                "shake"
+            ),
+        200
+    );
+
+
+    if(
+        target.hp <= 0
+    ){
+
+        finishGame(
+            target === player
+                ? "bot"
+                : "player"
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   POWERUPS
+========================================================= */
+
+const powerupTypes = [
+
+    {
+        type:"health",
+        emoji:"❤️",
+        className:"health-power"
+    },
+
+    {
+        type:"shield",
+        emoji:"🛡️",
+        className:"shield-power"
+    },
+
+    {
+        type:"speed",
+        emoji:"⚡",
+        className:"speed-power"
+    },
+
+    {
+        type:"damage",
+        emoji:"🔥",
+        className:"damage-power"
+    }
+
+];
+
+
+function spawnPowerup(){
+
+    if(
+        !running ||
+        powerups.length >= 4
+    )
+        return;
+
+
+    let x = 0;
+
+    let y = 0;
+
+
+    for(
+        let attempt=0;
+        attempt<50;
+        attempt++
+    ){
+
+        x =
+            40 +
+            Math.random() *
+            (
+                arena.clientWidth -
+                80
+            );
+
+
+        y =
+            40 +
+            Math.random() *
+            (
+                arena.clientHeight -
+                80
+            );
+
+
+        const test = {
+
+            left:x,
+            right:x+42,
+
+            top:y,
+            bottom:y+42
+
+        };
+
+
+        if(
+            !getWalls().some(
+                wall =>
+                    overlap(
+                        test,
+                        wall
+                    )
+            )
+        ){
+
+            break;
+
+        }
+
+    }
+
+
+    const data =
+        powerupTypes[
+            Math.floor(
+                Math.random() *
+                powerupTypes.length
+            )
+        ];
+
+
+    const element =
+        document.createElement(
+            "div"
+        );
+
+
+    element.className =
+        "powerup " +
+        data.className;
+
+
+    element.textContent =
+        data.emoji;
+
+
+    element.style.left =
+        x + "px";
+
+
+    element.style.top =
+        y + "px";
+
+
+    arena.appendChild(
+        element
+    );
+
+
+    powerups.push({
+
+        x,
+        y,
+
+        type:data.type,
+
+        el:element
+
+    });
+
+}
+
+
+/* =========================================================
+   POWERUP UPDATE
+========================================================= */
+
+function updatePowerups(){
+
+    if(!running)
+        return;
+
+
+    [...powerups].forEach(
+        power => {
+
+            const rect = {
+
+                left:power.x,
+
+                right:
+                    power.x + 42,
+
+                top:power.y,
+
+                bottom:
+                    power.y + 42
+
+            };
+
+
+            if(
+                overlap(
+                    rectFor(player),
+                    rect
+                )
+            ){
+
+                collectPowerup(
+                    player,
+                    power,
+                    "YOU"
+                );
+
+            }
+
+            else if(
+                overlap(
+                    rectFor(bot),
+                    rect
+                )
+            ){
+
+                collectPowerup(
+                    bot,
+                    power,
+                    "AI BOT"
+                );
+
+            }
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   COLLECT POWERUP
+========================================================= */
+
+function collectPowerup(
+    target,
+    power,
+    name
+){
+
+    power.el.remove();
+
+
+    const index =
+        powerups.indexOf(
+            power
+        );
+
+
+    if(index !== -1){
+
+        powerups.splice(
+            index,
+            1
+        );
+
+    }
+
+
+    sound("pickup");
+
+
+    if(
+        power.type === "health"
+    ){
+
+        target.hp =
+            Math.min(
+                100,
+                target.hp + 25
+            );
+
+
+        message.textContent =
+            "❤️ " +
+            name +
+            " collected HEALTH!";
+
+    }
+
+
+    if(
+        power.type === "shield"
+    ){
+
+        target.shield =
+            true;
+
+
+        addShield(
+            target === player
+                ? "player"
+                : "bot"
+        );
+
+
+        message.textContent =
+            "🛡️ " +
+            name +
+            " got a SHIELD!";
+
+    }
+
+
+    if(
+        power.type === "speed"
+    ){
+
+        target.speedBoost =
+            true;
+
+
+        message.textContent =
+            "⚡ " +
+            name +
+            " got SPEED BOOST!";
+
+
+        setTimeout(
+            () => {
+
+                target.speedBoost =
+                    false;
+
+            },
+            7000
+        );
+
+    }
+
+
+    if(
+        power.type === "damage"
+    ){
+
+        target.damageBoost =
+            true;
+
+
+        message.textContent =
+            "🔥 " +
+            name +
+            " got DAMAGE BOOST!";
+
+
+        setTimeout(
+            () => {
+
+                target.damageBoost =
+                    false;
+
+            },
+            7000
+        );
+
+    }
+
+
+    updateHUD();
+
+}
+
+
+/* =========================================================
+   SHIELD
+========================================================= */
+
+function addShield(
+    who
+){
+
+    removeShield(
+        who
+    );
+
+
+    const element =
+        who === "player"
+            ? playerEl
+            : botEl;
+
+
+    const shield =
+        document.createElement(
+            "div"
+        );
+
+
+    shield.className =
+        "shield";
+
+
+    shield.id =
+        "shield-" + who;
+
+
+    element.appendChild(
+        shield
+    );
+
+}
+
+
+function removeShield(
+    who
+){
+
+    const shield =
+        document.getElementById(
+            "shield-" + who
+        );
+
+
+    if(shield)
+        shield.remove();
+
+}
+
+
+/* =========================================================
+   EFFECTS
+========================================================= */
+
+function particles(
+    x,
+    y,
+    amount
+){
+
+    for(
+        let i=0;
+        i<amount;
+        i++
+    ){
+
+        const particle =
+            document.createElement(
+                "div"
+            );
+
+
+        particle.className =
+            "particle";
+
+
+        particle.style.left =
+            x + "px";
+
+
+        particle.style.top =
+            y + "px";
+
+
+        const angle =
+            Math.random() *
+            Math.PI *
+            2;
+
+
+        const distance =
+            15 +
+            Math.random() *
+            40;
+
+
+        particle.style.setProperty(
+            "--x",
+            Math.cos(angle) *
+            distance +
+            "px"
+        );
+
+
+        particle.style.setProperty(
+            "--y",
+            Math.sin(angle) *
+            distance +
+            "px"
+        );
+
+
+        arena.appendChild(
+            particle
+        );
+
+
+        setTimeout(
+            () =>
+                particle.remove(),
+            550
+        );
+
+    }
+
+}
+
+
+function hitEffect(
+    x,
+    y
+){
+
+    particles(
+        x,
+        y,
+        12
+    );
+
+
+    const ring =
+        document.createElement(
+            "div"
+        );
+
+
+    ring.className =
+        "hit-ring";
+
+
+    ring.style.left =
+        x - 12 + "px";
+
+
+    ring.style.top =
+        y - 12 + "px";
+
+
+    arena.appendChild(
+        ring
+    );
+
+
+    setTimeout(
+        () =>
+            ring.remove(),
+        400
+    );
+
+}
+
+
+function createMuzzle(
+    x,
+    y,
+    owner
+){
+
+    const muzzle =
+        document.createElement(
+            "div"
+        );
+
+
+    muzzle.className =
+        "muzzle";
+
+
+    muzzle.style.left =
+        x - 12 + "px";
+
+
+    muzzle.style.top =
+        y - 12 + "px";
+
+
+    muzzle.style.color =
+        owner === "player"
+            ? "var(--blue)"
+            : "var(--red)";
+
+
+    arena.appendChild(
+        muzzle
+    );
+
+
+    setTimeout(
+        () =>
+            muzzle.remove(),
+        150
+    );
+
+}
+
+
+/* =========================================================
+   HUD
+========================================================= */
+
+function updateHUD(){
+
+    playerHealth.style.width =
+        player.hp + "%";
+
+
+    botHealth.style.width =
+        bot.hp + "%";
+
+
+    playerHpText.textContent =
+        player.hp +
+        " HP";
+
+
+    botHpText.textContent =
+        bot.hp +
+        " HP";
+
+
+    updateStatus(
+        player,
+        playerStatus
+    );
+
+
+    updateStatus(
+        bot,
+        botStatus
+    );
+
+}
+
+
+function updateStatus(
+    obj,
+    element
+){
+
+    element.innerHTML = "";
+
+
+    if(obj.shield){
+
+        const span =
+            document.createElement(
+                "span"
+            );
+
+        span.textContent =
+            "🛡️ SHIELD";
+
+        element.appendChild(
+            span
+        );
+
+    }
+
+
+    if(obj.speedBoost){
+
+        const span =
+            document.createElement(
+                "span"
+            );
+
+        span.textContent =
+            "⚡ SPEED";
+
+        element.appendChild(
+            span
+        );
+
+    }
+
+
+    if(obj.damageBoost){
+
+        const span =
+            document.createElement(
+                "span"
+            );
+
+        span.textContent =
+            "🔥 DAMAGE";
+
+        element.appendChild(
+            span
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   WEAPON
+========================================================= */
+
+function setPlayerWeapon(
+    index
+){
+
+    player.weapon =
+        (
+            index +
+            weapons.length
+        ) %
+        weapons.length;
+
+
+    updateWeaponVisual(
+        playerWeapon,
+        player.weapon
+    );
+
+}
+
+
+function updateWeaponVisual(
+    element,
+    index
+){
+
+    element.className =
+        "weapon " +
+        (
+            index === 0
+                ? "blaster"
+                : index === 1
+                    ? "shotgun"
+                    : "rapid"
+        );
+
+}
+
+
+/* =========================================================
+   RESET
+========================================================= */
+
+function resetGame(){
+
+    clearInterval(
+        timerInterval
+    );
+
+    clearInterval(
+        powerupInterval
+    );
+
+
+    bullets.forEach(
+        bullet =>
+            bullet.el.remove()
+    );
+
+    bullets.length = 0;
+
+
+    powerups.forEach(
+        power =>
+            power.el.remove()
+    );
+
+    powerups.length = 0;
+
+
+    document
+        .querySelectorAll(
+            ".particle,.muzzle,.hit-ring,.shield"
+        )
+        .forEach(
+            element =>
+                element.remove()
+        );
+
+
+    player.hp = 100;
+
+    bot.hp = 100;
+
+
+    player.weapon = 0;
+
+    bot.weapon = 0;
+
+
+    player.shield = false;
+
+    bot.shield = false;
+
+
+    player.speedBoost = false;
+
+    bot.speedBoost = false;
+
+
+    player.damageBoost = false;
+
+    bot.damageBoost = false;
+
+
+    player.lastShot = 0;
+    player.vx = 0;
+    player.vy = 0;
+
+    bot.lastShot = 0;
+    bot.vx = 0;
+    bot.vy = 0;
+    bot.aiTimer = 0;
+    bot.strafeDirection = 1;
+    bot.targetPowerup = null;
+    bot.nextDecisionAt = 0;
+
+
+    player.x = 55;
+
+    player.y =
+        arena.clientHeight -
+        SIZE -
+        55;
+
+
+    bot.x =
+        arena.clientWidth -
+        SIZE -
+        55;
+
+    bot.y = 55;
+
+
+    timeLeft = 90;
+
+
+    running = false;
+
+    gameOver = false;
+
+
+    playerEl.style.left =
+        player.x + "px";
+
+    playerEl.style.top =
+        player.y + "px";
+
+
+    botEl.style.left =
+        bot.x + "px";
+
+    botEl.style.top =
+        bot.y + "px";
+
+
+    updateWeaponVisual(
+        playerWeapon,
+        0
+    );
+
+    updateWeaponVisual(
+        botWeapon,
+        0
+    );
+
+
+    timeEl.textContent =
+        "90";
+
+
+    updateHUD();
+
+}
+
+
+/* =========================================================
+   START GAME
+========================================================= */
+
+async function startGame(){
+
+    if(countdownRunning)
+        return;
+
+
+    initAudio();
+
+
+    resetGame();
+
+
+    startOverlay.classList.add(
+        "hidden"
+    );
+
+
+    resultOverlay.classList.add(
+        "hidden"
+    );
+
+
+    countdownRunning =
+        true;
+
+
+    const sequence =
+        [
+            "3",
+            "2",
+            "1",
+            "GO!"
+        ];
+
+
+    for(
+        const number of sequence
+    ){
+
+        countdown.textContent =
+            number;
+
+
+        sound(
+            number === "GO!"
+                ? "go"
+                : "count"
+        );
+
+
+        await new Promise(
+            resolve =>
+                setTimeout(
+                    resolve,
+                    700
+                )
+        );
+
+    }
+
+
+    countdown.textContent =
+        "";
+
+
+    countdownRunning =
+        false;
+
+
+    running = true;
+
+
+    message.textContent =
+        "🤖 The AI is hunting you!";
+
+
+    spawnPowerup();
+
+
+    timerInterval =
+        setInterval(
+            () => {
+
+                if(!running)
+                    return;
+
+
+                timeLeft--;
+
+
+                timeEl.textContent =
+                    timeLeft;
+
+
+                if(
+                    timeLeft <= 0
+                ){
+
+                    endByTime();
+
+                }
+
+            },
+            1000
+        );
+
+
+    powerupInterval =
+        setInterval(
+            () => {
+
+                if(
+                    running &&
+                    powerups.length < 4
+                ){
+
+                    spawnPowerup();
+
+                }
+
+            },
+            5000
+        );
+
+}
+
+
+/* =========================================================
+   END
+========================================================= */
+
+function finishGame(
+    loser
+){
+
+    if(gameOver)
+        return;
+
+
+    gameOver = true;
+
+    running = false;
+
+
+    clearInterval(
+        timerInterval
+    );
+
+    clearInterval(
+        powerupInterval
+    );
+
+
+    if(loser === "bot"){
+
+        sound("win");
+
+
+        resultTitle.textContent =
+            "🏆 YOU WIN!";
+
+
+        resultText.textContent =
+            "You defeated the AI bot with " +
+            player.hp +
+            " HP remaining.";
+
+    }
+
+    else{
+
+        resultTitle.textContent =
+            "🤖 BOT WINS";
+
+
+        resultText.textContent =
+            "The AI defeated you. Try another round!";
+
+    }
+
+
+    resultOverlay.classList.remove(
+        "hidden"
+    );
+
+
+    message.textContent =
+        "Match complete.";
+
+}
+
+
+function endByTime(){
+
+    if(gameOver)
+        return;
+
+
+    running = false;
+
+
+    clearInterval(
+        timerInterval
+    );
+
+
+    clearInterval(
+        powerupInterval
+    );
+
+
+    if(
+        player.hp === bot.hp
+    ){
+
+        resultTitle.textContent =
+            "🤝 DRAW";
+
+
+        resultText.textContent =
+            "Time ran out with both fighters at " +
+            player.hp +
+            " HP.";
+
+    }
+
+    else if(
+        player.hp > bot.hp
+    ){
+
+        sound("win");
+
+
+        resultTitle.textContent =
+            "🏆 YOU WIN!";
+
+
+        resultText.textContent =
+            "Time ran out, but you had more health.";
+
+    }
+
+    else{
+
+        resultTitle.textContent =
+            "🤖 BOT WINS";
+
+
+        resultText.textContent =
+            "Time ran out and the AI had more health.";
+
+    }
+
+
+    gameOver = true;
+
+
+    resultOverlay.classList.remove(
+        "hidden"
+    );
+
+}
+
+
+/* =========================================================
+   KEYBOARD
+========================================================= */
+
+document.addEventListener(
+    "keydown",
+    event => {
+
+        const key =
+            event.key.toLowerCase();
+
+
+        keys[key] = true;
+
+
+        if([
+            "w",
+            "a",
+            "s",
+            "d",
+            "f",
+            "1",
+            "2",
+            "3"
+        ].includes(key)){
+
+            event.preventDefault();
+
+        }
+
+
+        if(key === "f"){
+
+            playerShoot();
+
+        }
+
+
+        if(key === "1"){
+
+            setPlayerWeapon(0);
+
+        }
+
+
+        if(key === "2"){
+
+            setPlayerWeapon(1);
+
+        }
+
+
+        if(key === "3"){
+
+            setPlayerWeapon(2);
+
+        }
+
+    }
+);
+
+
+document.addEventListener(
+    "keyup",
+    event => {
+
+        keys[
+            event.key.toLowerCase()
+        ] = false;
+
+    }
+);
+
+
+/* =========================================================
+   DIFFICULTY BUTTONS
+========================================================= */
+
+document
+    .querySelectorAll(
+        ".difficultyBtn"
+    )
+    .forEach(
+        button => {
+
+            button.addEventListener(
+                "click",
+                () => {
+
+                    difficulty =
+                        button.dataset
+                            .difficulty;
+
+
+                    document
+                        .querySelectorAll(
+                            ".difficultyBtn"
+                        )
+                        .forEach(
+                            b =>
+                                b.classList
+                                .remove(
+                                    "active"
+                                )
+                        );
+
+
+                    button.classList.add(
+                        "active"
+                    );
+
+                }
+            );
+
+        }
+    );
+
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+document
+    .getElementById("startBtn")
+    .addEventListener(
+        "click",
+        startGame
+    );
+
+
+document
+    .getElementById("restartBtn")
+    .addEventListener(
+        "click",
+        startGame
+    );
+
+
+/* =========================================================
+   GAME LOOP
+========================================================= */
+
+function gameLoop(){
+
+    updatePlayer();
+
+    updateBot();
+
+    updateBullets();
+
+    updatePowerups();
+
+    requestAnimationFrame(
+        gameLoop
+    );
+
+}
+
+
+/* =========================================================
+   INITIALIZE
+========================================================= */
+
+resetGame();
+
+gameLoop();
+
+</script>
+
+</body>
+</html>

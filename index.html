@@ -2,181 +2,643 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GameZone 🎮</title>
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <meta name="description"
+          content="GameZone - Play, compete and dominate.">
+
+    <title>GameZone | Gaming Hub</title>
 
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-    <!-- NAVIGATION -->
-    <header>
-        <nav>
-            <h1>🎮 GameZone</h1>
+<!-- ================= NAVBAR ================= -->
 
-            <div class="nav-links">
-                <a href="#home">Home</a>
-                <a href="#games">Games</a>
-                <a href="#leaderboard">Leaderboard</a>
-                <a href="#news">News</a>
+<header class="navbar">
+
+    <a href="#home" class="logo">
+        <span class="logo-icon">G</span>
+        GAME<span>ZONE</span>
+    </a>
+
+    <nav class="nav-links" id="navLinks">
+        <a href="#home" class="active">Home</a>
+        <a href="#games">Games</a>
+        <a href="#leaderboard">Leaderboard</a>
+        <a href="#news">News</a>
+    </nav>
+
+    <a href="#games" class="nav-play">
+        PLAY NOW
+    </a>
+
+    <button class="menu-btn"
+            id="menuBtn"
+            aria-label="Open menu">
+        ☰
+    </button>
+
+</header>
+
+
+<!-- ================= HERO ================= -->
+
+<section class="hero" id="home">
+
+    <div class="hero-grid"></div>
+
+    <div class="hero-glow glow-one"></div>
+    <div class="hero-glow glow-two"></div>
+
+    <div class="hero-content">
+
+        <div class="hero-badge">
+            ⚡ THE ULTIMATE GAMING HUB
+        </div>
+
+        <h1>
+            ENTER THE
+            <span>GAMEZONE</span>
+        </h1>
+
+        <p>
+            Play intense battles, race against your rivals,
+            climb the leaderboard and prove that you're the best.
+        </p>
+
+        <div class="hero-buttons">
+
+            <a href="#games" class="primary-btn">
+                🎮 PLAY NOW
+            </a>
+
+            <a href="#games" class="secondary-btn">
+                EXPLORE GAMES
+            </a>
+
+        </div>
+
+        <div class="hero-stats">
+
+            <div>
+                <strong>2+</strong>
+                <span>GAMES</span>
             </div>
-        </nav>
-    </header>
+
+            <div>
+                <strong>24/7</strong>
+                <span>FUN</span>
+            </div>
+
+            <div>
+                <strong>∞</strong>
+                <span>BATTLES</span>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="hero-decoration">
+
+        <div class="floating-card card-one">
+            🎯
+        </div>
+
+        <div class="floating-card card-two">
+            🏆
+        </div>
+
+        <div class="floating-card card-three">
+            ⚡
+        </div>
+
+        <div class="hero-controller">
+            🎮
+        </div>
+
+    </div>
+
+</section>
 
 
-    <!-- HOME -->
-    <section id="home" class="hero">
+<!-- ================= FEATURED ================= -->
 
-        <div class="hero-content">
+<section class="featured">
 
-            <p class="small-title">
-                WELCOME TO THE GAMING WORLD
-            </p>
+    <div class="section-heading">
+
+        <div>
+            <span class="section-label">
+                FEATURED
+            </span>
 
             <h2>
-                LEVEL UP<br>
-                YOUR <span>GAME</span>
+                GAME OF THE WEEK
             </h2>
-
-            <p class="description">
-                Discover games, compete with players,
-                and become a gaming legend.
-            </p>
-
-            <button class="main-button" onclick="startGaming()">
-                START GAMING
-            </button>
-
         </div>
 
-    </section>
+        <span class="section-number">
+            01
+        </span>
+
+    </div>
 
 
-    <!-- GAMES -->
-    <section id="games" class="section">
+    <div class="featured-card">
 
-        <h2>🔥 Popular Games</h2>
+        <div class="featured-image">
+            <div class="featured-overlay"></div>
 
-        <div class="games-container">
-
-            <!-- GAME 1 -->
-            <div class="game-card">
-
-                <div class="game-image">
-                    🎯
-                </div>
-
-                <h3>Battle Arena</h3>
-
-                <p>
-                    Fight. Survive. Win.
-                </p>
-
-                <button onclick="playGame('Battle Arena')">
-                    PLAY NOW
-                </button>
-
+            <div class="featured-icon">
+                ⚔️
             </div>
 
-
-            <!-- GAME 2 -->
-            <div class="game-card">
-
-                <div class="game-image">
-                    🏎️
-                </div>
-
-                <h3>Speed Rush</h3>
-
-                <p>
-                    Race to the finish.
-                </p>
-
-                <button onclick="window.location.href='racing.html'">
-    PLAY NOW
-</button>
-
-            </div>
-
-
-            <!-- GAME 3 -->
-            <div class="game-card">
-
-                <div class="game-image">
-                    ⚔️
-                </div>
-
-                <h3>Warriors</h3>
-
-                <p>
-                    Become the ultimate warrior.
-                </p>
-
-                <button onclick="playGame('Warriors')">
-                    PLAY NOW
-                </button>
-
-            </div>
-
+            <span class="featured-tag">
+                🔥 HOT
+            </span>
         </div>
 
-    </section>
+        <div class="featured-info">
 
-
-    <!-- LEADERBOARD -->
-    <section id="leaderboard" class="section leaderboard">
-
-        <h2>🏆 Leaderboard</h2>
-
-        <div class="players">
-
-            <p>🥇 ShadowKing — 9850 XP</p>
-
-            <p>🥈 DragonX — 9120 XP</p>
-
-            <p>🥉 GhostPro — 8740 XP</p>
-
-            <p>🎮 GamerBoy — 8210 XP</p>
-
-        </div>
-
-    </section>
-
-
-    <!-- NEWS -->
-    <section id="news" class="section">
-
-        <h2>📰 Gaming News</h2>
-
-        <div class="news-card">
+            <span class="game-category">
+                ACTION • 2 PLAYER
+            </span>
 
             <h3>
-                New Battle Season Has Arrived!
+                BATTLE ARENA
             </h3>
 
             <p>
-                Get ready for new challenges,
-                new maps and amazing rewards.
+                Enter the arena and fight your opponent
+                in an intense two-player battle.
             </p>
+
+            <div class="game-meta">
+
+                <span>👥 2 PLAYERS</span>
+                <span>⚡ ACTION</span>
+                <span>🎮 KEYBOARD</span>
+
+            </div>
+
+            <a href="battle-arena.html"
+               class="primary-btn">
+                PLAY BATTLE ARENA →
+            </a>
 
         </div>
 
-    </section>
+    </div>
+
+</section>
 
 
-    <!-- FOOTER -->
-    <footer>
+<!-- ================= GAMES ================= -->
 
-        <p>
-            © 2026 GameZone | Made by a Gamer 🎮
-        </p>
+<section class="games-section" id="games">
 
-    </footer>
+    <div class="section-heading">
+
+        <div>
+            <span class="section-label">
+                EXPLORE
+            </span>
+
+            <h2>
+                TRENDING GAMES
+            </h2>
+        </div>
+
+        <a href="#games" class="view-all">
+            VIEW ALL →
+        </a>
+
+    </div>
 
 
-    <!-- JAVASCRIPT -->
-    <script src="script.js"></script>
+    <div class="games-grid">
+
+
+        <!-- Battle Arena -->
+
+        <article class="game-card">
+
+            <div class="game-image battle-image">
+
+                <span class="game-icon">
+                    ⚔️
+                </span>
+
+                <span class="game-status">
+                    ONLINE
+                </span>
+
+            </div>
+
+            <div class="game-info">
+
+                <span class="game-category">
+                    ACTION
+                </span>
+
+                <h3>
+                    BATTLE ARENA
+                </h3>
+
+                <p>
+                    Two players. One arena.
+                    Who will survive?
+                </p>
+
+                <div class="card-bottom">
+
+                    <span>
+                        👥 2 PLAYERS
+                    </span>
+
+                    <a href="battle-arena.html"
+                       class="small-btn">
+                        PLAY
+                    </a>
+
+                </div>
+
+            </div>
+
+        </article>
+
+
+        <!-- Speed Rush -->
+
+        <article class="game-card">
+
+            <div class="game-image racing-image">
+
+                <span class="game-icon">
+                    🏎️
+                </span>
+
+                <span class="game-status">
+                    ONLINE
+                </span>
+
+            </div>
+
+            <div class="game-info">
+
+                <span class="game-category">
+                    RACING
+                </span>
+
+                <h3>
+                    SPEED RUSH
+                </h3>
+
+                <p>
+                    Push your limits and leave
+                    your opponent behind.
+                </p>
+
+                <div class="card-bottom">
+
+                    <span>
+                        👥 2 PLAYERS
+                    </span>
+
+                    <a href="racing.html"
+                       class="small-btn">
+                        PLAY
+                    </a>
+
+                </div>
+
+            </div>
+
+        </article>
+
+
+        <!-- Warriors -->
+
+        <article class="game-card coming-soon">
+
+            <div class="game-image warriors-image">
+
+                <span class="game-icon">
+                    🛡️
+                </span>
+
+                <span class="game-status">
+                    SOON
+                </span>
+
+            </div>
+
+            <div class="game-info">
+
+                <span class="game-category">
+                    ADVENTURE
+                </span>
+
+                <h3>
+                    WARRIORS
+                </h3>
+
+                <p>
+                    A new adventure is coming
+                    to GameZone.
+                </p>
+
+                <div class="card-bottom">
+
+                    <span>
+                        🔒 COMING SOON
+                    </span>
+
+                    <button class="small-btn disabled"
+                            disabled>
+                        SOON
+                    </button>
+
+                </div>
+
+            </div>
+
+        </article>
+
+    </div>
+
+</section>
+
+
+<!-- ================= STATS ================= -->
+
+<section class="stats-section">
+
+    <div class="stats-card">
+
+        <div class="stat">
+            <strong>2+</strong>
+            <span>PLAYABLE GAMES</span>
+        </div>
+
+        <div class="stat">
+            <strong>100%</strong>
+            <span>FREE TO PLAY</span>
+        </div>
+
+        <div class="stat">
+            <strong>∞</strong>
+            <span>FUN &amp; BATTLES</span>
+        </div>
+
+        <div class="stat">
+            <strong>2026</strong>
+            <span>GAMEZONE</span>
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= LEADERBOARD ================= -->
+
+<section class="leaderboard-section"
+         id="leaderboard">
+
+    <div class="section-heading">
+
+        <div>
+            <span class="section-label">
+                COMPETE
+            </span>
+
+            <h2>
+                LEADERBOARD
+            </h2>
+        </div>
+
+        <span class="section-number">
+            02
+        </span>
+
+    </div>
+
+
+    <div class="leaderboard">
+
+        <div class="leader-row first">
+
+            <span class="rank">
+                01
+            </span>
+
+            <div class="player">
+                <div class="avatar">👑</div>
+
+                <div>
+                    <strong>ShadowKing</strong>
+                    <small>LEVEL 24</small>
+                </div>
+            </div>
+
+            <strong class="xp">
+                9,850 XP
+            </strong>
+
+        </div>
+
+
+        <div class="leader-row">
+
+            <span class="rank">
+                02
+            </span>
+
+            <div class="player">
+                <div class="avatar">🐉</div>
+
+                <div>
+                    <strong>DragonX</strong>
+                    <small>LEVEL 21</small>
+                </div>
+            </div>
+
+            <strong class="xp">
+                9,120 XP
+            </strong>
+
+        </div>
+
+
+        <div class="leader-row">
+
+            <span class="rank">
+                03
+            </span>
+
+            <div class="player">
+                <div class="avatar">👻</div>
+
+                <div>
+                    <strong>GhostPro</strong>
+                    <small>LEVEL 19</small>
+                </div>
+            </div>
+
+            <strong class="xp">
+                8,740 XP
+            </strong>
+
+        </div>
+
+
+        <div class="leader-row">
+
+            <span class="rank">
+                04
+            </span>
+
+            <div class="player">
+                <div class="avatar">🎮</div>
+
+                <div>
+                    <strong>GamerBoy</strong>
+                    <small>LEVEL 17</small>
+                </div>
+            </div>
+
+            <strong class="xp">
+                8,210 XP
+            </strong>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= NEWS ================= -->
+
+<section class="news-section" id="news">
+
+    <div class="section-heading">
+
+        <div>
+            <span class="section-label">
+                LATEST
+            </span>
+
+            <h2>
+                GAMEZONE NEWS
+            </h2>
+        </div>
+
+        <span class="section-number">
+            03
+        </span>
+
+    </div>
+
+
+    <article class="news-card">
+
+        <div class="news-icon">
+            🔥
+        </div>
+
+        <div class="news-content">
+
+            <span>
+                SEPTEMBER 2026
+            </span>
+
+            <h3>
+                NEW BATTLE SEASON HAS ARRIVED!
+            </h3>
+
+            <p>
+                The arena is open. Gather your friends,
+                enter the battle and fight your way
+                to the top of GameZone.
+            </p>
+
+            <a href="battle-arena.html">
+                ENTER THE ARENA →
+            </a>
+
+        </div>
+
+        <div class="news-arrow">
+            →
+        </div>
+
+    </article>
+
+</section>
+
+
+<!-- ================= CTA ================= -->
+
+<section class="cta">
+
+    <div class="cta-content">
+
+        <span>
+            READY?
+        </span>
+
+        <h2>
+            YOUR NEXT
+            <strong>GAME</strong>
+            STARTS NOW.
+        </h2>
+
+        <a href="#games"
+           class="primary-btn">
+            🎮 START GAMING
+        </a>
+
+    </div>
+
+</section>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer>
+
+    <div class="footer-logo">
+        GAME<span>ZONE</span>
+    </div>
+
+    <p>
+        Play. Compete. Dominate.
+    </p>
+
+    <div class="footer-links">
+
+        <a href="#home">Home</a>
+        <a href="#games">Games</a>
+        <a href="#leaderboard">Leaderboard</a>
+        <a href="#news">News</a>
+
+    </div>
+
+    <div class="copyright">
+        © 2026 GameZone. Made with 🎮
+    </div>
+
+</footer>
+
+
+<script src="script.js"></script>
 
 </body>
 </html>
