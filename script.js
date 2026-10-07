@@ -81,27 +81,82 @@
         });
     }
 
-    function readBest(key) {
+    function readLeaderboard() {
         try {
-            const value = Number(localStorage.getItem(key));
-            return Number.isFinite(value) && value > 0 ? value : null;
+            const stored = JSON.parse(localStorage.getItem("gamezone-leaderboard-v1") || "{}");
+            return stored && typeof stored === "object" ? stored : {};
         } catch (_) {
-            return null;
+            return {};
         }
     }
 
-    const arenaRecord = document.getElementById("arenaRecord");
-    const racingRecord = document.getElementById("racingRecord");
-    const bestArena = readBest("neon-arena-best");
-    const bestRace = readBest("speed-rush-best-seconds");
+    function renderLeaderboard(game, targetId, icon) {
+        const target = document.getElementById(targetId);
+        if (!target) return;
+        const entries = Array.isArray(readLeaderboard()[game]) ? readLeaderboard()[game].slice(0, 5) : [];
 
-    if (arenaRecord && bestArena !== null) {
-        arenaRecord.textContent = `${Math.floor(bestArena).toLocaleString()} pts`;
+        if (!entries.length) {
+            const empty = document.createElement("p");
+            empty.className = "leaderboard-empty";
+            empty.textContent = "No scores yet — be the first to set a record!";
+            target.replaceChildren(empty);
+            return;
+        }
+
+        const rows = entries.map((entry, index) => {
+            const row = document.createElement("div");
+            row.className = `leader-row${index === 0 ? " first" : ""}`;
+            const rank = document.createElement("span");
+            rank.className = "rank";
+            rank.textContent = String(index + 1).padStart(2, "0");
+            const player = document.createElement("div");
+            player.className = "player";
+            const avatar = document.createElement("div");
+            avatar.className = "avatar";
+            avatar.textContent = icon;
+            const identity = document.createElement("div");
+            const name = document.createElement("strong");
+            name.textContent = String(entry.name || "Player").slice(0, 16);
+            const detail = document.createElement("small");
+            detail.textContent = String(entry.detail || "ARCADE RUN").slice(0, 36);
+            identity.append(name, detail);
+            player.append(avatar, identity);
+            const score = document.createElement("strong");
+            score.className = "xp";
+            score.textContent = `${Number(entry.score || 0).toLocaleString()} ${entry.unit || "pts"}`;
+            row.append(rank, player, score);
+            return row;
+        });
+        target.replaceChildren(...rows);
     }
 
-    if (racingRecord && bestRace !== null) {
-        racingRecord.textContent = `${bestRace.toFixed(2)} s`;
+    const playerNameInput = document.getElementById("playerName");
+    const playerNameForm = document.getElementById("playerNameForm");
+    const nameSaved = document.getElementById("nameSaved");
+    if (playerNameInput) {
+        try { playerNameInput.value = localStorage.getItem("gamezone-player-name") || "Player"; } catch (_) { playerNameInput.value = "Player"; }
     }
+    if (playerNameForm && playerNameInput) {
+        playerNameForm.addEventListener("submit", (event) => {
+            event.preventDefault();
+            const name = playerNameInput.value.trim().slice(0, 16) || "Player";
+            playerNameInput.value = name;
+            try { localStorage.setItem("gamezone-player-name", name); } catch (_) {}
+            if (nameSaved) nameSaved.textContent = `Saved as ${name}`;
+        });
+    }
+
+    function refreshLeaderboards() {
+        renderLeaderboard("arena", "arenaLeaderboard", "⚔️");
+        renderLeaderboard("racing", "racingLeaderboard", "🏎️");
+        renderLeaderboard("warriors", "warriorsLeaderboard", "🛡️");
+    }
+
+    refreshLeaderboards();
+    window.addEventListener("pageshow", refreshLeaderboards);
+    window.addEventListener("storage", (event) => {
+        if (event.key === "gamezone-leaderboard-v1") refreshLeaderboards();
+    });
 
     document.querySelectorAll(".primary-btn, .secondary-btn, .small-btn").forEach((button) => {
         button.addEventListener("click", () => {

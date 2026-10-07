@@ -87,7 +87,7 @@
         <div class="hero-stats">
 
             <div>
-                <strong>2+</strong>
+                <strong>3</strong>
                 <span>GAMES</span>
             </div>
 
@@ -326,7 +326,7 @@
 
         <!-- Warriors -->
 
-        <article class="game-card coming-soon">
+        <article class="game-card">
 
             <div class="game-image warriors-image">
 
@@ -335,7 +335,7 @@
                 </span>
 
                 <span class="game-status">
-                    SOON
+                    READY
                 </span>
 
             </div>
@@ -351,20 +351,17 @@
                 </h3>
 
                 <p>
-                    A new adventure is coming
-                    to GameZone.
+                    Fight through five dangerous encounters,
+                    protect your health, and defeat the Warden.
                 </p>
 
                 <div class="card-bottom">
 
                     <span>
-                        🔒 COMING SOON
+                        🛡️ ADVENTURE
                     </span>
 
-                    <button class="small-btn disabled"
-                            disabled>
-                        SOON
-                    </button>
+                    <a href="warriors.html" class="small-btn">PLAY</a>
 
                 </div>
 
@@ -384,7 +381,7 @@
     <div class="stats-card">
 
         <div class="stat">
-            <strong>2+</strong>
+            <strong>3</strong>
             <span>PLAYABLE GAMES</span>
         </div>
 
@@ -417,31 +414,30 @@
 
         <div>
             <span class="section-label">
-                SAVED ON THIS DEVICE
+                LOCAL ARCADE RANKINGS
             </span>
 
             <h2>
-                YOUR BEST RUNS
+                LEADERBOARD
             </h2>
         </div>
 
-        <span class="section-number">LOCAL</span>
+        <span class="section-number">TOP 5</span>
 
     </div>
 
 
-    <p class="leaderboard-note">Your scores are saved privately in this browser. They are not an online global leaderboard.</p>
-    <div class="leaderboard" aria-live="polite">
-        <div class="leader-row first">
-            <span class="rank">01</span>
-            <div class="player"><div class="avatar">⚔️</div><div><strong>Neon Arena</strong><small>PERSONAL BEST · POINTS</small></div></div>
-            <strong class="xp" id="arenaRecord">No run yet</strong>
-        </div>
-        <div class="leader-row">
-            <span class="rank">02</span>
-            <div class="player"><div class="avatar">🏎️</div><div><strong>Speed Rush</strong><small>FASTEST FINISH · SECONDS</small></div></div>
-            <strong class="xp" id="racingRecord">No win yet</strong>
-        </div>
+    <p class="leaderboard-note">Add a player name, play any game, and your top five runs will appear here. Scores are saved on this device.</p>
+    <form class="player-name-form" id="playerNameForm">
+        <label for="playerName">Player name</label>
+        <input id="playerName" name="playerName" maxlength="16" autocomplete="nickname" placeholder="Enter a name" required>
+        <button class="small-btn" type="submit">SAVE NAME</button>
+        <span id="nameSaved" role="status" aria-live="polite"></span>
+    </form>
+    <div class="leaderboard-lists" aria-live="polite">
+        <section class="leaderboard-game" aria-label="Neon Arena top runs"><h3>⚔️ Neon Arena</h3><div class="leaderboard" id="arenaLeaderboard"></div></section>
+        <section class="leaderboard-game" aria-label="Speed Rush top runs"><h3>🏎️ Speed Rush</h3><div class="leaderboard" id="racingLeaderboard"></div></section>
+        <section class="leaderboard-game" aria-label="Warriors top runs"><h3>🛡️ Warriors</h3><div class="leaderboard" id="warriorsLeaderboard"></div></section>
     </div>
 
 </section>
@@ -483,13 +479,13 @@
             </span>
 
             <h3>
-                TWO ARCADE GAMES ARE LIVE!
+                THREE GAMES ARE LIVE!
             </h3>
 
             <p>
-            Survive Neon Arena’s bot waves, or take on
-            Speed Rush with traffic, nitro, and a friend.
-            Both games are ready to play.
+            Survive Neon Arena, race through traffic in Speed Rush,
+            or take on the Warriors five-stage adventure.
+            All three games are ready to play.
             </p>
 
             <a href="gamezone.html">

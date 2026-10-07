@@ -1268,6 +1268,125 @@ section:not(.hero) {
     font-size: 13px;
 }
 
+.player-name-form {
+
+    max-width: 900px;
+    margin: 0 auto 24px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+}
+
+.player-name-form label {
+    color: var(--text);
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.player-name-form input {
+    min-width: 180px;
+    padding: 11px 13px;
+    color: var(--text);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font: inherit;
+}
+
+.player-name-form input:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+.player-name-form [role="status"] {
+    color: var(--primary);
+    font-size: 12px;
+}
+
+.leaderboard-lists {
+    max-width: 1100px;
+    margin: auto;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.leaderboard-game {
+    min-width: 0;
+    padding: 18px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+}
+
+.leaderboard-game h3 {
+    margin: 0 0 13px;
+    color: var(--text);
+    font-size: 16px;
+}
+
+.leaderboard-game .leader-row {
+    grid-template-columns: 34px minmax(0, 1fr) auto;
+    gap: 9px;
+    padding: 12px 9px;
+}
+
+.leaderboard-game .rank {
+    font-size: 16px;
+}
+
+.leaderboard-game .player {
+    min-width: 0;
+    gap: 8px;
+}
+
+.leaderboard-game .player strong,
+.leaderboard-game .player small {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.leaderboard-game .avatar {
+    width: 34px;
+    height: 34px;
+    flex: 0 0 34px;
+    font-size: 16px;
+}
+
+.leaderboard-game .xp {
+    font-size: 11px;
+    white-space: nowrap;
+}
+
+.leaderboard-empty {
+    padding: 18px 12px;
+    color: var(--muted);
+    font-size: 13px;
+    text-align: center;
+    border: 1px dashed var(--border);
+}
+
+@media (max-width: 1000px) {
+    .leaderboard-lists {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 600px) {
+    .leaderboard-lists {
+        grid-template-columns: 1fr;
+    }
+
+    .player-name-form {
+        align-items: stretch;
+    }
+
+    .player-name-form input {
+        flex: 1 1 100%;
+    }
+}
+
 .leader-row {
 
     display: grid;
