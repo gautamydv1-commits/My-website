@@ -38,7 +38,9 @@
 
     <button class="menu-btn"
             id="menuBtn"
-            aria-label="Open menu">
+            aria-label="Open menu"
+            aria-controls="navLinks"
+            aria-expanded="false">
         ☰
     </button>
 
@@ -66,8 +68,8 @@
         </h1>
 
         <p>
-            Play intense battles, race against your rivals,
-            climb the leaderboard and prove that you're the best.
+            Battle waves of bots, race a friend or the computer,
+            and chase your personal best in the GameZone arcade.
         </p>
 
         <div class="hero-buttons">
@@ -235,7 +237,7 @@
                 </span>
 
                 <span class="game-status">
-                    ONLINE
+                    READY
                 </span>
 
             </div>
@@ -284,7 +286,7 @@
                 </span>
 
                 <span class="game-status">
-                    ONLINE
+                    READY
                 </span>
 
             </div>
@@ -300,14 +302,14 @@
                 </h3>
 
                 <p>
-                    Push your limits and leave
-                    your opponent behind.
+            Race the rival or challenge a friend.
+                    Dodge traffic and unleash nitro to reach the finish first.
                 </p>
 
                 <div class="card-bottom">
 
                     <span>
-                        👥 2 PLAYERS
+                        🤖 VS CPU · 2P
                     </span>
 
                     <a href="racing.html"
@@ -415,110 +417,31 @@
 
         <div>
             <span class="section-label">
-                COMPETE
+                SAVED ON THIS DEVICE
             </span>
 
             <h2>
-                LEADERBOARD
+                YOUR BEST RUNS
             </h2>
         </div>
 
-        <span class="section-number">
-            02
-        </span>
+        <span class="section-number">LOCAL</span>
 
     </div>
 
 
-    <div class="leaderboard">
-
+    <p class="leaderboard-note">Your scores are saved privately in this browser. They are not an online global leaderboard.</p>
+    <div class="leaderboard" aria-live="polite">
         <div class="leader-row first">
-
-            <span class="rank">
-                01
-            </span>
-
-            <div class="player">
-                <div class="avatar">👑</div>
-
-                <div>
-                    <strong>ShadowKing</strong>
-                    <small>LEVEL 24</small>
-                </div>
-            </div>
-
-            <strong class="xp">
-                9,850 XP
-            </strong>
-
+            <span class="rank">01</span>
+            <div class="player"><div class="avatar">⚔️</div><div><strong>Neon Arena</strong><small>PERSONAL BEST · POINTS</small></div></div>
+            <strong class="xp" id="arenaRecord">No run yet</strong>
         </div>
-
-
         <div class="leader-row">
-
-            <span class="rank">
-                02
-            </span>
-
-            <div class="player">
-                <div class="avatar">🐉</div>
-
-                <div>
-                    <strong>DragonX</strong>
-                    <small>LEVEL 21</small>
-                </div>
-            </div>
-
-            <strong class="xp">
-                9,120 XP
-            </strong>
-
+            <span class="rank">02</span>
+            <div class="player"><div class="avatar">🏎️</div><div><strong>Speed Rush</strong><small>FASTEST FINISH · SECONDS</small></div></div>
+            <strong class="xp" id="racingRecord">No win yet</strong>
         </div>
-
-
-        <div class="leader-row">
-
-            <span class="rank">
-                03
-            </span>
-
-            <div class="player">
-                <div class="avatar">👻</div>
-
-                <div>
-                    <strong>GhostPro</strong>
-                    <small>LEVEL 19</small>
-                </div>
-            </div>
-
-            <strong class="xp">
-                8,740 XP
-            </strong>
-
-        </div>
-
-
-        <div class="leader-row">
-
-            <span class="rank">
-                04
-            </span>
-
-            <div class="player">
-                <div class="avatar">🎮</div>
-
-                <div>
-                    <strong>GamerBoy</strong>
-                    <small>LEVEL 17</small>
-                </div>
-            </div>
-
-            <strong class="xp">
-                8,210 XP
-            </strong>
-
-        </div>
-
     </div>
 
 </section>
@@ -556,17 +479,17 @@
         <div class="news-content">
 
             <span>
-                SEPTEMBER 2026
+                OCTOBER 2026
             </span>
 
             <h3>
-                NEW BATTLE SEASON HAS ARRIVED!
+                TWO ARCADE GAMES ARE LIVE!
             </h3>
 
             <p>
-            The arena is open. Dodge the bots,
-            collect health and energy, and fight
-            your way through wave after wave.
+            Survive Neon Arena’s bot waves, or take on
+            Speed Rush with traffic, nitro, and a friend.
+            Both games are ready to play.
             </p>
 
             <a href="gamezone.html">

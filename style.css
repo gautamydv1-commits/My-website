@@ -1257,6 +1257,17 @@ section:not(.hero) {
     margin: auto;
 }
 
+.leaderboard-note {
+
+    max-width: 900px;
+
+    margin: -12px auto 20px;
+
+    color: var(--muted);
+
+    font-size: 13px;
+}
+
 .leader-row {
 
     display: grid;

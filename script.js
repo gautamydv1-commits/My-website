@@ -1,208 +1,114 @@
-/* =========================================
-   GAMEZONE MAIN JAVASCRIPT
-========================================= */
+(() => {
+    "use strict";
 
+    const menuButton = document.getElementById("menuBtn");
+    const navigation = document.getElementById("navLinks");
 
-/* =========================================
-   MOBILE MENU
-========================================= */
+    function setMenuOpen(open) {
+        if (!menuButton || !navigation) return;
 
-const menuBtn =
-    document.getElementById("menuBtn");
-
-const navLinks =
-    document.getElementById("navLinks");
-
-
-menuBtn.addEventListener("click", () => {
-
-    navLinks.classList.toggle("open");
-
-    if (navLinks.classList.contains("open")) {
-
-        menuBtn.textContent = "✕";
-
-        menuBtn.setAttribute(
-            "aria-label",
-            "Close menu"
-        );
-
-    } else {
-
-        menuBtn.textContent = "☰";
-
-        menuBtn.setAttribute(
-            "aria-label",
-            "Open menu"
-        );
-
+        navigation.classList.toggle("open", open);
+        menuButton.textContent = open ? "✕" : "☰";
+        menuButton.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+        menuButton.setAttribute("aria-expanded", String(open));
     }
 
-});
+    if (menuButton && navigation) {
+        menuButton.addEventListener("click", () => {
+            setMenuOpen(menuButton.getAttribute("aria-expanded") !== "true");
+        });
 
+        navigation.querySelectorAll("a").forEach((link) => {
+            link.addEventListener("click", () => setMenuOpen(false));
+        });
 
-/* =========================================
-   CLOSE MOBILE MENU
-========================================= */
+        document.addEventListener("keydown", (event) => {
+            if (event.key === "Escape") setMenuOpen(false);
+        });
 
-const links =
-    navLinks.querySelectorAll("a");
+        document.addEventListener("click", (event) => {
+            if (!navigation.contains(event.target) && !menuButton.contains(event.target)) {
+                setMenuOpen(false);
+            }
+        });
+    }
 
+    const navigationLinks = navigation ? [...navigation.querySelectorAll("a")] : [];
+    const sections = [...document.querySelectorAll("section[id]")];
+    let scrollFrame = 0;
 
-links.forEach(link => {
+    function updateActiveLink() {
+        scrollFrame = 0;
+        let activeId = "home";
 
-    link.addEventListener("click", () => {
-
-        navLinks.classList.remove("open");
-
-        menuBtn.textContent = "☰";
-
-        menuBtn.setAttribute(
-            "aria-label",
-            "Open menu"
-        );
-
-    });
-
-});
-
-
-/* =========================================
-   ACTIVE NAVIGATION
-========================================= */
-
-const sections =
-    document.querySelectorAll("section[id]");
-
-
-window.addEventListener("scroll", () => {
-
-    let current = "";
-
-    sections.forEach(section => {
-
-        const sectionTop =
-            section.offsetTop - 150;
-
-        if (
-            window.scrollY >= sectionTop
-        ) {
-
-            current =
-                section.getAttribute("id");
-
+        for (const section of sections) {
+            if (window.scrollY >= section.offsetTop - 160) activeId = section.id;
         }
 
-    });
+        navigationLinks.forEach((link) => {
+            const active = link.getAttribute("href") === `#${activeId}`;
+            link.classList.toggle("active", active);
+            if (active) link.setAttribute("aria-current", "location");
+            else link.removeAttribute("aria-current");
+        });
+    }
 
+    window.addEventListener("scroll", () => {
+        if (!scrollFrame) scrollFrame = window.requestAnimationFrame(updateActiveLink);
+    }, { passive: true });
+    updateActiveLink();
 
-    links.forEach(link => {
-
-        link.classList.remove("active");
-
-        if (
-            link.getAttribute("href") ===
-            "#" + current
-        ) {
-
-            link.classList.add("active");
-
-        }
-
-    });
-
-});
-
-
-/* =========================================
-   SCROLL REVEAL
-========================================= */
-
-const revealElements =
-    document.querySelectorAll(
+    const prefersReducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    const revealElements = document.querySelectorAll(
         ".game-card, .featured-card, .leader-row, .news-card, .stats-card"
     );
 
-
-const revealObserver =
-    new IntersectionObserver(
-        entries => {
-
-            entries.forEach(entry => {
-
-                if (entry.isIntersecting) {
-
-                    entry.target.style.opacity = "1";
-
-                    entry.target.style.transform =
-                        "translateY(0)";
-
-                    revealObserver.unobserve(
-                        entry.target
-                    );
-
-                }
-
+    if (!prefersReducedMotion && "IntersectionObserver" in window) {
+        const revealObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach((entry) => {
+                if (!entry.isIntersecting) return;
+                entry.target.style.opacity = "1";
+                entry.target.style.transform = "translateY(0)";
+                observer.unobserve(entry.target);
             });
+        }, { threshold: 0.12 });
 
-        },
-        {
-            threshold: 0.12
+        revealElements.forEach((element) => {
+            element.style.opacity = "0";
+            element.style.transform = "translateY(25px)";
+            element.style.transition = "opacity 0.6s ease, transform 0.6s ease";
+            revealObserver.observe(element);
+        });
+    }
+
+    function readBest(key) {
+        try {
+            const value = Number(localStorage.getItem(key));
+            return Number.isFinite(value) && value > 0 ? value : null;
+        } catch (_) {
+            return null;
         }
-    );
+    }
 
+    const arenaRecord = document.getElementById("arenaRecord");
+    const racingRecord = document.getElementById("racingRecord");
+    const bestArena = readBest("neon-arena-best");
+    const bestRace = readBest("speed-rush-best-seconds");
 
-revealElements.forEach(element => {
+    if (arenaRecord && bestArena !== null) {
+        arenaRecord.textContent = `${Math.floor(bestArena).toLocaleString()} pts`;
+    }
 
-    element.style.opacity = "0";
+    if (racingRecord && bestRace !== null) {
+        racingRecord.textContent = `${bestRace.toFixed(2)} s`;
+    }
 
-    element.style.transform =
-        "translateY(25px)";
-
-    element.style.transition =
-        "opacity 0.6s ease, transform 0.6s ease";
-
-    revealObserver.observe(element);
-
-});
-
-
-/* =========================================
-   BUTTON CLICK EFFECT
-========================================= */
-
-const buttons =
-    document.querySelectorAll(
-        ".primary-btn, .secondary-btn, .small-btn"
-    );
-
-
-buttons.forEach(button => {
-
-    button.addEventListener("click", () => {
-
-        button.style.transform =
-            "scale(0.96)";
-
-        setTimeout(() => {
-
-            button.style.transform = "";
-
-        }, 120);
-
+    document.querySelectorAll(".primary-btn, .secondary-btn, .small-btn").forEach((button) => {
+        button.addEventListener("click", () => {
+            button.style.transform = "scale(0.96)";
+            window.setTimeout(() => { button.style.transform = ""; }, 120);
+        });
     });
 
-});
-
-
-/* =========================================
-   PAGE LOADED
-========================================= */
-
-window.addEventListener("load", () => {
-
-    document.body.classList.add(
-        "page-loaded"
-    );
-
-});
+    window.addEventListener("load", () => document.body.classList.add("page-loaded"), { once: true });
+})();

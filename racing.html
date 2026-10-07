@@ -1,639 +1,81 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Speed Rush 2.0</title>
-
-<style>
-
-* {
-    box-sizing: border-box;
-}
-
-body {
-    margin: 0;
-    background: #070707;
-    color: white;
-    font-family: Arial, sans-serif;
-    text-align: center;
-}
-
-h1 {
-    color: #00ff88;
-    margin: 15px 0 5px;
-}
-
-.instructions {
-    color: #aaa;
-    margin-bottom: 12px;
-}
-
-.hud {
-    width: min(900px, 94vw);
-    margin: auto;
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
-}
-
-.panel {
-    background: #151515;
-    padding: 10px 18px;
-    border: 1px solid #333;
-    flex: 1;
-}
-
-.health {
-    height: 12px;
-    background: #333;
-    margin-top: 6px;
-}
-
-.health div {
-    height: 100%;
-    width: 100%;
-}
-
-#health1 {
-    background: #00aaff;
-}
-
-#health2 {
-    background: #ff3333;
-}
-
-#game {
-    position: relative;
-    width: min(900px, 94vw);
-    height: 600px;
-    margin: 15px auto;
-    overflow: hidden;
-
-    background:
-        linear-gradient(
-            90deg,
-            #16702f 0%,
-            #16702f 12%,
-            #444 12%,
-            #444 88%,
-            #16702f 88%,
-            #16702f 100%
-        );
-
-    border: 4px solid #00ff88;
-}
-
-/* Road */
-
-.road-line {
-    position: absolute;
-    width: 8px;
-    height: 100px;
-    background: white;
-    left: 50%;
-    transform: translateX(-50%);
-}
-
-.line1 { top: -100px; }
-.line2 { top: 100px; }
-.line3 { top: 300px; }
-.line4 { top: 500px; }
-
-.road-line {
-    animation: road 0.7s linear infinite;
-}
-
-@keyframes road {
-    from {
-        transform: translate(-50%, -200px);
-    }
-
-    to {
-        transform: translate(-50%, 200px);
-    }
-}
-
-/* Cars */
-
-.car {
-    position: absolute;
-    width: 55px;
-    height: 90px;
-    border-radius: 12px;
-    z-index: 5;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    font-size: 30px;
-
-    box-shadow: 0 5px 15px #000;
-}
-
-#car1 {
-    background: #008cff;
-    left: 30%;
-    bottom: 40px;
-}
-
-#car2 {
-    background: #ff3333;
-    left: 60%;
-    bottom: 40px;
-}
-
-/* Obstacles */
-
-.obstacle {
-    position: absolute;
-    width: 55px;
-    height: 70px;
-    background: #111;
-    border: 3px solid #ffcc00;
-    border-radius: 8px;
-
-    font-size: 30px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-/* Finish */
-
-#finish {
-    position: absolute;
-    top: -30px;
-    width: 100%;
-    height: 25px;
-
-    background:
-        repeating-linear-gradient(
-            90deg,
-            white 0,
-            white 25px,
-            black 25px,
-            black 50px
-        );
-
-    z-index: 3;
-}
-
-/* Message */
-
-#message {
-    min-height: 28px;
-    font-size: 22px;
-    font-weight: bold;
-}
-
-/* Button */
-
-button {
-    background: #00ff88;
-    color: black;
-    border: none;
-
-    padding: 12px 28px;
-
-    font-weight: bold;
-    cursor: pointer;
-
-    margin-bottom: 10px;
-}
-
-button:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 20px #00ff88;
-}
-
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#07120f">
+  <meta name="description" content="Race through neon traffic in Speed Rush. Dodge hazards, manage nitro, and beat the rival or a friend.">
+  <title>Speed Rush — GameZone</title>
+  <style>
+    :root{color-scheme:dark;--bg:#07100f;--panel:#111c1b;--ink:#f3fff9;--muted:#a9c0b7;--mint:#62ffc0;--red:#ff6177;--gold:#ffe36c}
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 50% -20%,#174936 0,transparent 56%),var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+    button{font:inherit;cursor:pointer}button:focus-visible,a:focus-visible{outline:3px solid #fff;outline-offset:3px}
+    .shell{max-width:1100px;margin:auto;padding:18px clamp(12px,3vw,32px) calc(24px + env(safe-area-inset-bottom))}
+    .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.brand{color:var(--ink);text-decoration:none;font-weight:950;letter-spacing:.05em}.brand b{color:var(--mint)}.back{color:var(--muted);text-decoration:none;font-size:14px}.back:hover{color:white}
+    .intro{text-align:center;margin:0 auto 16px}.eyebrow{color:var(--mint);font-weight:900;font-size:11px;letter-spacing:.2em;margin:0 0 4px}.intro h1{font-size:clamp(30px,5vw,48px);line-height:1;margin:0;letter-spacing:-.04em}.intro p{color:var(--muted);margin:8px 0 0}
+    .game{overflow:hidden;border:1px solid #315248;border-radius:20px;background:var(--panel);box-shadow:0 24px 80px #0008,0 0 40px #45ffc012}
+    .toolbar{display:flex;gap:10px;justify-content:space-between;align-items:center;padding:12px clamp(12px,2.5vw,22px);border-bottom:1px solid #263c35;background:#101a19}.modes,.actions{display:flex;gap:8px;align-items:center}.mode,.action{border:1px solid #3b554c;border-radius:11px;padding:9px 13px;color:var(--ink);background:#1b2925;font-weight:800}.mode.active{border-color:var(--mint);color:var(--mint);box-shadow:inset 0 0 0 1px #62ffc044}.action.primary{border-color:transparent;background:var(--mint);color:#07110d}.action:disabled,.mode:disabled{opacity:.55;cursor:not-allowed}
+    .hud{display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:center;padding:13px clamp(12px,2.5vw,22px);background:#0d1715}.racer:last-child{text-align:right}.name{font-size:11px;font-weight:900;letter-spacing:.13em}.name.p1{color:var(--mint)}.name.p2{color:#ff8793}.barline{height:8px;max-width:230px;margin-top:4px;background:#283934;border-radius:99px;overflow:hidden}.racer:last-child .barline{margin-left:auto}.fill{height:100%;width:100%;border-radius:inherit;transition:width .18s;background:linear-gradient(90deg,#38f5a9,#a2ffd3)}.racer:last-child .fill{background:linear-gradient(90deg,#ff9b76,#ff526d)}.nitro{margin-top:7px;height:5px}.nitro .fill{background:linear-gradient(90deg,#42d8ff,#a5f5ff)}.metric{text-align:center;min-width:100px}.metric strong{display:block;font-size:20px;line-height:1.1;font-variant-numeric:tabular-nums}.metric span{display:block;color:var(--muted);font-size:9px;font-weight:900;letter-spacing:.15em}.distance{color:var(--gold);font-size:11px!important;margin-top:5px}
+    .track-wrap{position:relative;background:#0b1512}.track{display:block;width:100%;height:auto;aspect-ratio:1000/560;touch-action:none}.overlay{position:absolute;inset:0;display:grid;place-items:center;padding:18px;background:#07100fbb;backdrop-filter:blur(5px);text-align:center}.overlay[hidden]{display:none}.dialog{max-width:420px;padding:22px;border:1px solid #456257;border-radius:18px;background:#0d1916ed;box-shadow:0 18px 50px #0009}.dialog-tag{color:var(--mint);font-size:10px;font-weight:950;letter-spacing:.2em}.dialog h2{font-size:clamp(26px,5vw,38px);line-height:1.05;margin:7px 0}.dialog p{color:var(--muted);margin:0 0 16px}.dialog .action{padding:11px 24px}
+    .controls{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:12px;padding:12px clamp(12px,2.5vw,22px);border-top:1px solid #263c35}.help{color:var(--muted);font-size:12px}.help strong{color:var(--ink)}.touch-controls{display:none;align-items:center;justify-content:space-between;gap:10px}.touch-group{display:flex;gap:7px}.touch-controls button{min-width:50px;min-height:48px;border:1px solid #3e5c50;border-radius:13px;background:#1c2c26;color:var(--ink);font-size:19px;font-weight:900;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent;box-shadow:0 3px 0 #07100f}.touch-controls button.nitro{min-width:84px;color:#a5f5ff;font-size:13px}.touch-controls button.held{transform:translateY(2px);background:#2f5144;box-shadow:none}.controls-note{color:#829990;font-size:11px;text-align:right}
+    .howto{max-width:850px;margin:13px auto 0;color:var(--muted);font-size:13px;text-align:center}.howto b{color:var(--ink)}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    @media(max-width:700px){.shell{padding:12px 9px calc(16px + env(safe-area-inset-bottom))}.topbar{margin-bottom:8px}.intro{margin-bottom:10px}.intro p{font-size:13px}.game{border-radius:14px}.toolbar{padding:8px;gap:6px}.mode,.action{padding:8px 10px;font-size:12px}.hud{padding:9px;gap:7px}.name{font-size:9px;letter-spacing:.07em}.metric{min-width:62px}.metric strong{font-size:17px}.metric span{font-size:8px}.distance{font-size:9px!important}.controls{grid-template-columns:1fr;gap:7px;padding:8px}.help{display:none}.touch-controls{display:flex;flex-direction:column;align-items:stretch;gap:6px}.touch-group{width:100%;justify-content:center}.touch-controls button{min-width:46px;min-height:48px;flex:1;max-width:92px}.touch-controls button.nitro{min-width:70px;max-width:116px}.controls-note{text-align:center;font-size:10px}.howto{font-size:11px;margin-top:8px}}
+    @media(max-width:360px){.mode,.action{padding:7px 8px;font-size:11px}.actions{gap:5px}.touch-controls button{min-width:42px}.touch-controls button.nitro{min-width:62px}.hud{grid-template-columns:1fr auto 1fr}.metric{min-width:50px}}
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+  </style>
 </head>
-
 <body>
-
-<h1>🏎️ SPEED RUSH 2.0</h1>
-
-<div class="instructions">
-    🔵 P1: A / D + W &nbsp;&nbsp; | &nbsp;&nbsp;
-    🔴 P2: ← / → + ↑
-</div>
-
-<div class="hud">
-
-    <div class="panel">
-        🔵 PLAYER 1
-
-        <div class="health">
-            <div id="health1"></div>
-        </div>
-    </div>
-
-    <div class="panel">
-        ⏱️ TIME
-
-        <div id="timer">
-            60
-        </div>
-    </div>
-
-    <div class="panel">
-        🔴 PLAYER 2
-
-        <div class="health">
-            <div id="health2"></div>
-        </div>
-    </div>
-
-</div>
-
-<p id="message">
-    Press START RACE!
-</p>
-
-<button onclick="startRace()">
-    START RACE
-</button>
-
-<div id="game">
-
-    <div id="finish"></div>
-
-    <div class="road-line line1"></div>
-    <div class="road-line line2"></div>
-    <div class="road-line line3"></div>
-    <div class="road-line line4"></div>
-
-    <div id="car1" class="car">
-        🏎️
-    </div>
-
-    <div id="car2" class="car">
-        🚗
-    </div>
-
-</div>
-
-<script>
-
-const game =
-    document.getElementById("game");
-
-const car1 =
-    document.getElementById("car1");
-
-const car2 =
-    document.getElementById("car2");
-
-const health1 =
-    document.getElementById("health1");
-
-const health2 =
-    document.getElementById("health2");
-
-const timerText =
-    document.getElementById("timer");
-
-const message =
-    document.getElementById("message");
-
-
-const keys = {};
-
-let running = false;
-
-let time = 60;
-
-let healthP1 = 100;
-let healthP2 = 100;
-
-let speed1 = 0;
-let speed2 = 0;
-
-let obstacles = [];
-
-let timer;
-
-
-document.addEventListener(
-    "keydown",
-    event => {
-
-        keys[event.key.toLowerCase()] = true;
-
-    }
-);
-
-
-document.addEventListener(
-    "keyup",
-    event => {
-
-        keys[event.key.toLowerCase()] = false;
-
-    }
-);
-
-
-function startRace() {
-
-    running = true;
-
-    time = 60;
-
-    healthP1 = 100;
-    healthP2 = 100;
-
-    speed1 = 0;
-    speed2 = 0;
-
-    timerText.textContent = time;
-
-    health1.style.width = "100%";
-    health2.style.width = "100%";
-
-    message.textContent =
-        "🏁 RACE STARTED!";
-
-    car1.style.left = "30%";
-    car2.style.left = "60%";
-
-    obstacles.forEach(
-        obstacle => obstacle.remove()
-    );
-
-    obstacles = [];
-
-    createObstacle();
-    createObstacle();
-    createObstacle();
-
-    clearInterval(timer);
-
-    timer = setInterval(() => {
-
-        if (!running) {
-            return;
-        }
-
-        time--;
-
-        timerText.textContent = time;
-
-        if (time <= 0) {
-
-            endRace();
-
-        }
-
-    }, 1000);
-
-}
-
-
-function createObstacle() {
-
-    const obstacle =
-        document.createElement("div");
-
-    obstacle.className =
-        "obstacle";
-
-    obstacle.textContent = "🚧";
-
-    obstacle.style.left =
-        (20 + Math.random() * 60) + "%";
-
-    obstacle.style.top =
-        (-100 - Math.random() * 300) + "px";
-
-    game.appendChild(obstacle);
-
-    obstacles.push(obstacle);
-
-}
-
-
-function moveCars() {
-
-    if (!running) {
-        return;
-    }
-
-    const acceleration = 0.12;
-
-    const maxSpeed = 4;
-
-    /* PLAYER 1 */
-
-    if (keys["w"]) {
-        speed1 += acceleration;
-    } else {
-        speed1 *= 0.97;
-    }
-
-    if (keys["a"]) {
-        car1.style.left =
-            (parseFloat(car1.style.left || 30) - 0.6) + "%";
-    }
-
-    if (keys["d"]) {
-        car1.style.left =
-            (parseFloat(car1.style.left || 30) + 0.6) + "%";
-    }
-
-
-    /* PLAYER 2 */
-
-    if (keys["arrowup"]) {
-        speed2 += acceleration;
-    } else {
-        speed2 *= 0.97;
-    }
-
-    if (keys["arrowleft"]) {
-        car2.style.left =
-            (parseFloat(car2.style.left || 60) - 0.6) + "%";
-    }
-
-    if (keys["arrowright"]) {
-        car2.style.left =
-            (parseFloat(car2.style.left || 60) + 0.6) + "%";
-    }
-
-
-    speed1 =
-        Math.min(speed1, maxSpeed);
-
-    speed2 =
-        Math.min(speed2, maxSpeed);
-
-
-    /* Keep cars on road */
-
-    let p1 =
-        parseFloat(car1.style.left || 30);
-
-    let p2 =
-        parseFloat(car2.style.left || 60);
-
-    p1 = Math.max(14, Math.min(p1, 82));
-
-    p2 = Math.max(14, Math.min(p2, 82));
-
-    car1.style.left = p1 + "%";
-    car2.style.left = p2 + "%";
-
-
-    /* Move obstacles */
-
-    obstacles.forEach(obstacle => {
-
-        let y =
-            parseFloat(
-                obstacle.style.top
-            );
-
-        y += 2 + Math.max(
-            speed1,
-            speed2
-        );
-
-        obstacle.style.top =
-            y + "px";
-
-
-        if (y > game.clientHeight) {
-
-            obstacle.style.top =
-                (-100 - Math.random() * 200) + "px";
-
-            obstacle.style.left =
-                (20 + Math.random() * 60) + "%";
-
-        }
-
-
-        checkCollision(
-            car1,
-            obstacle,
-            1
-        );
-
-        checkCollision(
-            car2,
-            obstacle,
-            2
-        );
-
-    });
-
-}
-
-
-function checkCollision(
-    car,
-    obstacle,
-    player
-) {
-
-    const a =
-        car.getBoundingClientRect();
-
-    const b =
-        obstacle.getBoundingClientRect();
-
-
-    if (
-        a.left < b.right &&
-        a.right > b.left &&
-        a.top < b.bottom &&
-        a.bottom > b.top
-    ) {
-
-        obstacle.style.top =
-            "-150px";
-
-
-        if (player === 1) {
-
-            healthP1 -= 20;
-
-            health1.style.width =
-                healthP1 + "%";
-
-        } else {
-
-            healthP2 -= 20;
-
-            health2.style.width =
-                healthP2 + "%";
-
-        }
-
-
-        if (
-            healthP1 <= 0 ||
-            healthP2 <= 0
-        ) {
-
-            endRace();
-
-        }
-
-    }
-
-}
-
-
-function endRace() {
-
-    running = false;
-
-    clearInterval(timer);
-
-
-    if (
-        healthP1 > healthP2
-    ) {
-
-        message.textContent =
-            "🏆 PLAYER 1 WINS!";
-
-    } else if (
-        healthP2 > healthP1
-    ) {
-
-        message.textContent =
-            "🏆 PLAYER 2 WINS!";
-
-    } else {
-
-        message.textContent =
-            "🤝 DRAW!";
-
-    }
-
-}
-
-
-function gameLoop() {
-
-    moveCars();
-
-    requestAnimationFrame(
-        gameLoop
-    );
-
-}
-
-
-gameLoop();
-
-</script>
-
+  <main class="shell">
+    <header class="topbar"><a class="brand" href="index.html" aria-label="GameZone home">🎮 GAME<b>ZONE</b></a><a class="back" href="index.html">← Back to GameZone</a></header>
+    <section class="intro"><p class="eyebrow">ARCADE RACING · NITRO READY</p><h1>Speed Rush</h1><p>Pick a lane, dodge the traffic, and hit the nitro when it counts.</p></section>
+    <section class="game" aria-label="Speed Rush game">
+      <div class="toolbar"><div class="modes" role="group" aria-label="Race mode"><button class="mode active" id="cpuMode" type="button" aria-pressed="true">VS RIVAL</button><button class="mode" id="localMode" type="button" aria-pressed="false">2 PLAYERS</button></div><div class="actions"><button class="action" id="soundBtn" type="button" aria-pressed="true" aria-label="Mute sound">🔊</button><button class="action" id="pauseBtn" type="button" disabled>Pause</button><button class="action primary" id="startBtn" type="button">Start race</button></div></div>
+      <div class="hud">
+        <div class="racer"><div class="name p1" id="p1Name">YOU · 0 KM/H</div><div class="barline" role="progressbar" aria-label="Player 1 health" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100"><div class="fill" id="p1Health"></div></div><div class="barline nitro" role="progressbar" aria-label="Player 1 nitro" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100"><div class="fill" id="p1Nitro"></div></div></div>
+        <div class="metric"><strong id="timer">00:00</strong><span>RACE TIME</span><span class="distance" id="distance">0 / 6 KM</span></div>
+        <div class="racer"><div class="name p2" id="p2Name">RIVAL · 0 KM/H</div><div class="barline" role="progressbar" aria-label="Player 2 health" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100"><div class="fill" id="p2Health"></div></div><div class="barline nitro" role="progressbar" aria-label="Player 2 nitro" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100"><div class="fill" id="p2Nitro"></div></div></div>
+      </div>
+      <div class="track-wrap"><canvas class="track" id="track" width="1000" height="560" role="img" aria-label="Top-down neon race track with two cars and traffic hazards">Your browser does not support the racing canvas.</canvas><div class="overlay" id="overlay"><div class="dialog"><div class="dialog-tag" id="overlayTag">CHOOSE YOUR RACE</div><h2 id="overlayTitle">Ready, racer?</h2><p id="overlayCopy">Race the computer or challenge a friend. Stay clear of traffic and save nitro for a straight.</p><button class="action primary" id="overlayButton" type="button">Start race</button></div></div></div><p class="sr-only" id="announcer" role="status" aria-live="polite"></p>
+      <div class="controls"><div class="help"><strong>YOU:</strong> A / D to steer · W to boost <span id="p2Help">&nbsp; <strong>RIVAL:</strong> computer controlled</span></div><div class="touch-controls" id="touchControls" aria-label="Touch racing controls"><div class="touch-group"><button type="button" data-control="p1-left" aria-label="Steer left">◀</button><button type="button" data-control="p1-right" aria-label="Steer right">▶</button><button class="nitro" type="button" data-control="p1-nitro" aria-label="Use nitro">⚡ NITRO</button></div><div class="touch-group" id="p2Touch" hidden><button type="button" data-control="p2-left" aria-label="Player two steer left">◀</button><button type="button" data-control="p2-right" aria-label="Player two steer right">▶</button><button class="nitro" type="button" data-control="p2-nitro" aria-label="Player two use nitro">⚡ P2</button></div></div><div class="controls-note" id="controlsNote">Touch controls ready</div></div>
+    </section>
+    <p class="howto"><b>Health</b> drops when you hit traffic. Nitro refills while you coast. Reach 6 km first to win. In 2-player mode, P1 uses <b>A / D / W</b> and P2 uses <b>← / → / ↑</b> or the matching touch buttons.</p>
+  </main>
+  <script>
+  (()=>{
+    'use strict';
+    const W=1000,H=560,FINISH=6000,LANE_X=[[136,250,364],[636,750,864]],CAR_Y=438;
+    const canvas=document.querySelector('#track'),ctx=canvas.getContext('2d');
+    const $=s=>document.querySelector(s), keys=new Set(), hazards=[];
+    const els={p1Name:$('#p1Name'),p2Name:$('#p2Name'),p1Health:$('#p1Health'),p2Health:$('#p2Health'),p1Nitro:$('#p1Nitro'),p2Nitro:$('#p2Nitro'),timer:$('#timer'),distance:$('#distance'),overlay:$('#overlay'),overlayTag:$('#overlayTag'),overlayTitle:$('#overlayTitle'),overlayCopy:$('#overlayCopy'),overlayButton:$('#overlayButton'),start:$('#startBtn'),pause:$('#pauseBtn'),sound:$('#soundBtn'),cpu:$('#cpuMode'),local:$('#localMode'),p2Touch:$('#p2Touch'),p2Help:$('#p2Help'),note:$('#controlsNote')};
+    let mode='cpu',state='ready',last=0,elapsed=0,spawnClock=0,audio=null,soundOn=true,roadOffset=0,raf=0;
+    const drivers=[];
+    const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
+    function makeDriver(id){return{id,lane:1,laneX:LANE_X[id][1],health:100,nitro:100,distance:0,speed:0,baseSpeed:id===0?157:154,damageWait:0,boosting:false,steerWait:0}}
+    function reset(){hazards.length=0;drivers.length=0;drivers.push(makeDriver(0),makeDriver(1));elapsed=0;spawnClock=.5;roadOffset=0;keys.clear();state='playing';els.overlay.hidden=true;els.start.disabled=true;els.start.textContent='Racing…';els.pause.disabled=false;els.pause.textContent='Pause';last=performance.now();updateHud();raf=requestAnimationFrame(loop)}
+    function setMode(next){if(state==='playing'||state==='paused')return;mode=next;els.cpu.classList.toggle('active',mode==='cpu');els.local.classList.toggle('active',mode==='local');els.cpu.setAttribute('aria-pressed',String(mode==='cpu'));els.local.setAttribute('aria-pressed',String(mode==='local'));$('#p2Touch').hidden=mode!=='local';els.p2Help.innerHTML=mode==='cpu'?'&nbsp; <strong>RIVAL:</strong> computer controlled':'&nbsp; <strong>P2:</strong> ← / → · ↑ nitro';els.note.textContent=mode==='cpu'?'Touch controls ready':'P1 and P2 touch controls';draw()}
+    function showOverlay(tag,title,copy,button='Play again'){els.overlayTag.textContent=tag;els.overlayTitle.textContent=title;els.overlayCopy.textContent=copy;els.overlayButton.textContent=button;els.overlay.hidden=false}
+    function beep(frequency=440,duration=.1,type='sine'){if(!soundOn)return;try{if(!audio){const A=window.AudioContext||window.webkitAudioContext;if(A)audio=new A()}if(!audio)return;if(audio.state==='suspended')audio.resume();const o=audio.createOscillator(),g=audio.createGain();o.type=type;o.frequency.value=frequency;g.gain.setValueAtTime(.04,audio.currentTime);g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+duration);o.connect(g);g.connect(audio.destination);o.start();o.stop(audio.currentTime+duration)}catch(_){}}
+    function togglePause(){if(state==='playing'){state='paused';keys.clear();els.pause.textContent='Resume';showOverlay('PAUSED','Catch your breath','Your race is paused. Tap resume when you’re ready.','Resume race');els.start.disabled=false;els.start.textContent='Resume'}else if(state==='paused'){state='playing';els.overlay.hidden=true;els.pause.textContent='Pause';els.start.disabled=true;els.start.textContent='Racing…';last=performance.now();raf=requestAnimationFrame(loop)}}
+    function endRace(winner,reason){if(state==='finished')return;state='finished';keys.clear();els.pause.disabled=true;els.start.disabled=false;els.start.textContent='Race again';const name=winner===0?'YOU WIN!':winner===1?(mode==='cpu'?'RIVAL WINS':'PLAYER 2 WINS'):'PHOTO FINISH!';showOverlay(reason,name,`${Math.floor(drivers[0].distance)} m vs ${Math.floor(drivers[1].distance)} m · Start another race to take the lead.`,'Race again');$('#announcer').textContent=`Race finished. ${name}`;if(winner===0&&reason==='FINISH LINE'){try{const previous=Number(localStorage.getItem('speed-rush-best-seconds'));if(!previous||elapsed<previous)localStorage.setItem('speed-rush-best-seconds',elapsed.toFixed(2))}catch(_){}}beep(winner===0?700:180,.25,winner===0?'triangle':'sawtooth')}
+    function laneFree(id,lane){return !hazards.some(h=>h.id===id&&h.lane===lane&&h.y>110&&h.y<470)}
+    function moveLane(d,delta){const left=keys.has(`p${d.id+1}-left`),right=keys.has(`p${d.id+1}-right`);if((left||right)&&d.steerWait<=0){const next=clamp(d.lane+(right?1:-1),0,2);if(next!==d.lane){d.lane=next;beep(360,.045);d.steerWait=.16}}d.steerWait=Math.max(0,d.steerWait-delta);d.laneX+=(LANE_X[d.id][d.lane]-d.laneX)*Math.min(1,delta*13)}
+    function updateAi(delta){const rival=drivers[1];if(mode!=='cpu')return;const oncoming=hazards.find(h=>h.id===1&&h.lane===rival.lane&&h.y>230&&h.y<405);if(oncoming){const options=[0,1,2].filter(l=>l!==rival.lane&&laneFree(1,l));if(options.length)rival.lane=options[Math.floor(Math.random()*options.length)]}if(Math.random()<delta*.18){const options=[0,1,2].filter(l=>laneFree(1,l));if(options.length&&Math.random()<.36)rival.lane=options[Math.floor(Math.random()*options.length)]}}
+    function spawnHazard(id){let lane=Math.floor(Math.random()*3);if(mode==='cpu'&&id===1&&lane===drivers[1].lane)lane=(lane+1+Math.floor(Math.random()*2))%3;hazards.push({id,lane,y:-65,kind:Math.random()<.18?'nitro':'traffic',passed:false})}
+    function update(delta){elapsed+=delta;roadOffset=(roadOffset+delta*330)%100;spawnClock-=delta;if(spawnClock<=0){spawnHazard(0);spawnHazard(1);spawnClock=.75+Math.random()*.52}updateAi(delta);for(const d of drivers){moveLane(d,delta);d.boosting=keys.has(`p${d.id+1}-nitro`)&&d.nitro>0;d.nitro=clamp(d.nitro+(d.boosting?-48:13)*delta,0,100);d.speed=d.baseSpeed+(d.boosting?92:0);d.distance+=d.speed*delta;d.damageWait=Math.max(0,d.damageWait-delta)}for(let i=hazards.length-1;i>=0;i--){const h=hazards[i],d=drivers[h.id];h.y+=(180+d.speed*.72)*delta;if(h.y>CAR_Y-44&&h.y<CAR_Y+38&&h.lane===d.lane&&d.damageWait<=0){h.y=H+80;if(h.kind==='nitro'){d.nitro=clamp(d.nitro+35,0,100);beep(760,.08,'sine')}else{d.health=clamp(d.health-25,0,100);d.damageWait=1;d.baseSpeed=Math.max(125,d.baseSpeed-9);beep(115,.18,'sawtooth')}}if(h.y>H+80)hazards.splice(i,1)}if(drivers[0].health<=0||drivers[1].health<=0){const winner=drivers[0].health===drivers[1].health?-1:drivers[0].health>drivers[1].health?0:1;endRace(winner,'CRASHED OUT');return}const p1=drivers[0].distance>=FINISH,p2=drivers[1].distance>=FINISH;if(p1||p2){endRace(p1&&p2?(drivers[0].distance>=drivers[1].distance?0:1):p1?0:1,'FINISH LINE');return}if(elapsed>=75)endRace(drivers[0].distance===drivers[1].distance?-1:drivers[0].distance>drivers[1].distance?0:1,'TIME UP')}
+    function rounded(x,y,w,h,r,color){ctx.fillStyle=color;ctx.beginPath();ctx.roundRect(x,y,w,h,r);ctx.fill()}
+    function drawCar(x,y,color,boost=false,ghost=false){ctx.save();ctx.translate(x,y);ctx.globalAlpha=ghost?.72:1;if(boost){ctx.fillStyle='#61edff';ctx.shadowColor='#61edff';ctx.shadowBlur=19;ctx.beginPath();ctx.moveTo(-9,27);ctx.lineTo(0,48+Math.random()*7);ctx.lineTo(9,27);ctx.fill();ctx.shadowBlur=0}rounded(-23,-34,46,72,12,'#050a08');rounded(-20,-38,40,68,11,color);rounded(-14,-19,28,20,7,'#102a2e');ctx.fillStyle='#d6fff5';ctx.globalAlpha=.8;ctx.fillRect(-14,-36,9,4);ctx.fillRect(5,-36,9,4);ctx.fillStyle='#ff566b';ctx.fillRect(-14,25,9,4);ctx.fillRect(5,25,9,4);ctx.globalAlpha=1;ctx.restore()}
+    function draw(){ctx.clearRect(0,0,W,H);const grass=ctx.createLinearGradient(0,0,W,H);grass.addColorStop(0,'#143a2d');grass.addColorStop(1,'#0b241d');ctx.fillStyle=grass;ctx.fillRect(0,0,W,H);ctx.fillStyle='#222b2c';ctx.fillRect(24,0,452,H);ctx.fillRect(524,0,452,H);ctx.fillStyle='#dfffee';ctx.globalAlpha=.45;for(const origin of [24,524]){ctx.fillRect(origin+6,0,4,H);ctx.fillRect(origin+442,0,4,H);for(let y=-100+roadOffset;y<H;y+=100){ctx.fillStyle='#cde9db';ctx.fillRect(origin+151,y,3,50);ctx.fillRect(origin+301,y,3,50)}}ctx.globalAlpha=1;ctx.fillStyle='#62ffc0';ctx.fillRect(497,0,6,H);for(let y=-35+roadOffset;y<H;y+=70){ctx.fillStyle='#ecfff6';ctx.fillRect(497,y,6,34)}
+      ctx.font='900 11px system-ui';ctx.textAlign='center';ctx.fillStyle='#8bb8a5';ctx.fillText('P1 · TURBO CIRCUIT',250,23);ctx.fillText(mode==='cpu'?'CPU RIVAL · TURBO CIRCUIT':'P2 · TURBO CIRCUIT',750,23);
+      for(const h of hazards){ctx.save();ctx.translate(LANE_X[h.id][h.lane],h.y);if(h.kind==='nitro'){ctx.shadowColor='#45eaff';ctx.shadowBlur=12;rounded(-18,-18,36,36,8,'#14718a');ctx.shadowBlur=0;ctx.fillStyle='#b7f8ff';ctx.font='900 20px system-ui';ctx.fillText('⚡',0,7)}else{ctx.shadowColor='#ffba52';ctx.shadowBlur=8;rounded(-20,-22,40,44,7,'#b84b36');ctx.shadowBlur=0;rounded(-12,-14,24,28,4,'#ffe0a1');ctx.fillStyle='#35231a';ctx.fillRect(-11,-3,22,5)}ctx.restore()}
+      if(drivers.length){drawCar(drivers[0].laneX,CAR_Y,'#39f5a4',drivers[0].boosting,drivers[0].damageWait>0);drawCar(drivers[1].laneX,CAR_Y,mode==='cpu'?'#ff526b':'#ffb14f',drivers[1].boosting,drivers[1].damageWait>0)}else{drawCar(LANE_X[0][1],CAR_Y,'#39f5a4');drawCar(LANE_X[1][1],CAR_Y,'#ff526b')}
+      if(state==='ready'){ctx.fillStyle='#e6fff2';ctx.globalAlpha=.65+.25*Math.sin(performance.now()*.003);ctx.font='800 14px system-ui';ctx.fillText('CHOOSE A MODE · TAP START TO RACE',W/2,H-22);ctx.globalAlpha=1}}
+    function updateHud(){if(!drivers.length)return;for(const [i,id] of ['p1','p2'].entries()){const d=drivers[i],health=$(`#${id}Health`).parentElement,nitro=$(`#${id}Nitro`).parentElement;$(`#${id}Name`).textContent=`${i===0?'YOU':mode==='cpu'?'RIVAL':'PLAYER 2'} · ${Math.round(d.speed*1.8)} KM/H`;$(`#${id}Health`).style.width=`${d.health}%`;$(`#${id}Nitro`).style.width=`${d.nitro}%`;health.setAttribute('aria-valuenow',String(d.health));nitro.setAttribute('aria-valuenow',String(Math.round(d.nitro)))}els.timer.textContent=`${String(Math.floor(elapsed/60)).padStart(2,'0')}:${String(Math.floor(elapsed%60)).padStart(2,'0')}`;els.distance.textContent=`${Math.floor(drivers[0].distance/1000)} / 6 KM`}
+    function loop(now){if(state!=='playing')return;const delta=Math.min((now-last)/1000,.035);last=now;update(delta);updateHud();draw();if(state==='playing')raf=requestAnimationFrame(loop)}
+    els.start.addEventListener('click',()=>state==='paused'?togglePause():reset());els.overlayButton.addEventListener('click',()=>state==='paused'?togglePause():reset());els.pause.addEventListener('click',togglePause);els.cpu.addEventListener('click',()=>setMode('cpu'));els.local.addEventListener('click',()=>setMode('local'));els.sound.addEventListener('click',()=>{soundOn=!soundOn;els.sound.textContent=soundOn?'🔊':'🔇';els.sound.setAttribute('aria-pressed',String(soundOn));els.sound.setAttribute('aria-label',soundOn?'Mute sound':'Enable sound');if(soundOn)beep(540,.08)});
+    window.addEventListener('keydown',e=>{const k=e.key.toLowerCase();if(['arrowleft','arrowright','arrowup',' '].includes(k))e.preventDefault();if(k==='escape'||k==='p'){if(!e.repeat)togglePause();return}keys.add(k==='arrowleft'?'p2-left':k==='arrowright'?'p2-right':k==='arrowup'?'p2-nitro':k==='a'?'p1-left':k==='d'?'p1-right':k==='w'?'p1-nitro':k)});window.addEventListener('keyup',e=>{const k=e.key.toLowerCase();keys.delete(k==='arrowleft'?'p2-left':k==='arrowright'?'p2-right':k==='arrowup'?'p2-nitro':k==='a'?'p1-left':k==='d'?'p1-right':k==='w'?'p1-nitro':k)});window.addEventListener('blur',()=>{keys.clear();if(state==='playing')togglePause()});
+    document.querySelectorAll('[data-control]').forEach(button=>{const control=button.dataset.control;const release=()=>{keys.delete(control);button.classList.remove('held');button.setAttribute('aria-pressed','false')};button.addEventListener('pointerdown',e=>{e.preventDefault();keys.add(control);button.classList.add('held');button.setAttribute('aria-pressed','true');try{button.setPointerCapture(e.pointerId)}catch(_){}});for(const event of ['pointerup','pointercancel','lostpointercapture'])button.addEventListener(event,release);button.addEventListener('contextmenu',e=>e.preventDefault())});
+    setMode('cpu');draw();
+  })();
+  </script>
 </body>
 </html>
